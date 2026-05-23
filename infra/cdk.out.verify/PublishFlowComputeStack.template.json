@@ -1,0 +1,916 @@
+{
+ "Resources": {
+  "PipelineVpc0543904A": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.0.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "PublishFlowComputeStack/PipelineVpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/Resource"
+   }
+  },
+  "PipelineVpcPublicSubnet1Subnet26FF83E2": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      0,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "CidrBlock": "10.0.0.0/18",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "PublishFlowComputeStack/PipelineVpc/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PipelineVpc0543904A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/PublicSubnet1/Subnet"
+   }
+  },
+  "PipelineVpcPublicSubnet1RouteTableE9A67515": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "PublishFlowComputeStack/PipelineVpc/PublicSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PipelineVpc0543904A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/PublicSubnet1/RouteTable"
+   }
+  },
+  "PipelineVpcPublicSubnet1RouteTableAssociation6D13736B": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "PipelineVpcPublicSubnet1RouteTableE9A67515"
+    },
+    "SubnetId": {
+     "Ref": "PipelineVpcPublicSubnet1Subnet26FF83E2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/PublicSubnet1/RouteTableAssociation"
+   }
+  },
+  "PipelineVpcPublicSubnet1DefaultRoute44F3E91D": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "PipelineVpcIGW3FA4A524"
+    },
+    "RouteTableId": {
+     "Ref": "PipelineVpcPublicSubnet1RouteTableE9A67515"
+    }
+   },
+   "DependsOn": [
+    "PipelineVpcVPCGW3256101F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/PublicSubnet1/DefaultRoute"
+   }
+  },
+  "PipelineVpcPublicSubnet2Subnet64F58E18": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      1,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "CidrBlock": "10.0.64.0/18",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Public"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Name",
+      "Value": "PublishFlowComputeStack/PipelineVpc/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PipelineVpc0543904A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/PublicSubnet2/Subnet"
+   }
+  },
+  "PipelineVpcPublicSubnet2RouteTable5219ED4D": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "PublishFlowComputeStack/PipelineVpc/PublicSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PipelineVpc0543904A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/PublicSubnet2/RouteTable"
+   }
+  },
+  "PipelineVpcPublicSubnet2RouteTableAssociation54D39738": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "PipelineVpcPublicSubnet2RouteTable5219ED4D"
+    },
+    "SubnetId": {
+     "Ref": "PipelineVpcPublicSubnet2Subnet64F58E18"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/PublicSubnet2/RouteTableAssociation"
+   }
+  },
+  "PipelineVpcPublicSubnet2DefaultRoute04C861A0": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "PipelineVpcIGW3FA4A524"
+    },
+    "RouteTableId": {
+     "Ref": "PipelineVpcPublicSubnet2RouteTable5219ED4D"
+    }
+   },
+   "DependsOn": [
+    "PipelineVpcVPCGW3256101F"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/PublicSubnet2/DefaultRoute"
+   }
+  },
+  "PipelineVpcIsolatedSubnet1SubnetA5CBCA8F": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      0,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "CidrBlock": "10.0.128.0/18",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Name",
+      "Value": "PublishFlowComputeStack/PipelineVpc/IsolatedSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PipelineVpc0543904A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/IsolatedSubnet1/Subnet"
+   }
+  },
+  "PipelineVpcIsolatedSubnet1RouteTable48C0D549": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "PublishFlowComputeStack/PipelineVpc/IsolatedSubnet1"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PipelineVpc0543904A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/IsolatedSubnet1/RouteTable"
+   }
+  },
+  "PipelineVpcIsolatedSubnet1RouteTableAssociationC97F61F4": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "PipelineVpcIsolatedSubnet1RouteTable48C0D549"
+    },
+    "SubnetId": {
+     "Ref": "PipelineVpcIsolatedSubnet1SubnetA5CBCA8F"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/IsolatedSubnet1/RouteTableAssociation"
+   }
+  },
+  "PipelineVpcIsolatedSubnet2Subnet53783D14": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": {
+     "Fn::Select": [
+      1,
+      {
+       "Fn::GetAZs": ""
+      }
+     ]
+    },
+    "CidrBlock": "10.0.192.0/18",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Isolated"
+     },
+     {
+      "Key": "Name",
+      "Value": "PublishFlowComputeStack/PipelineVpc/IsolatedSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PipelineVpc0543904A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/IsolatedSubnet2/Subnet"
+   }
+  },
+  "PipelineVpcIsolatedSubnet2RouteTableE4FF0D15": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "PublishFlowComputeStack/PipelineVpc/IsolatedSubnet2"
+     }
+    ],
+    "VpcId": {
+     "Ref": "PipelineVpc0543904A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/IsolatedSubnet2/RouteTable"
+   }
+  },
+  "PipelineVpcIsolatedSubnet2RouteTableAssociationF3E1A5D0": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "PipelineVpcIsolatedSubnet2RouteTableE4FF0D15"
+    },
+    "SubnetId": {
+     "Ref": "PipelineVpcIsolatedSubnet2Subnet53783D14"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/IsolatedSubnet2/RouteTableAssociation"
+   }
+  },
+  "PipelineVpcIGW3FA4A524": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Name",
+      "Value": "PublishFlowComputeStack/PipelineVpc"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/IGW"
+   }
+  },
+  "PipelineVpcVPCGW3256101F": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "PipelineVpcIGW3FA4A524"
+    },
+    "VpcId": {
+     "Ref": "PipelineVpc0543904A"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineVpc/VPCGW"
+   }
+  },
+  "PipelineCluster63B468F9": {
+   "Type": "AWS::ECS::Cluster",
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineCluster/Resource"
+   }
+  },
+  "PublisherRoleFDE2F285": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "Shared ECS task and execution role for publish_flow",
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+       ]
+      ]
+     }
+    ],
+    "RoleName": "publisher"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PublisherRole/Resource"
+   }
+  },
+  "PublisherRoleDefaultPolicy04D6B219": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "EngineLogGroup893F148F",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "PublishFlowStorageStack:ExportsOutputFnGetAttArtifactsBucket2AAC5544ArnD57FAE19"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "PublishFlowStorageStack:ExportsOutputFnGetAttArtifactsBucket2AAC5544ArnD57FAE19"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "PublishFlowStorageStack:ExportsOutputFnGetAttJobStateTable8E120B77Arn125B2001"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "PublishFlowStorageStack:ExportsOutputFnGetAttJobStateTable8E120B77Arn125B2001"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PublisherRoleDefaultPolicy04D6B219",
+    "Roles": [
+     {
+      "Ref": "PublisherRoleFDE2F285"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PublisherRole/DefaultPolicy/Resource"
+   }
+  },
+  "PipelineTaskDefinition5229ECC2": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "PYTHONPATH",
+        "Value": "/app"
+       }
+      ],
+      "Essential": true,
+      "Image": "public.ecr.aws/docker/library/python:3.11-slim",
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "EngineLogGroup893F148F"
+        },
+        "awslogs-stream-prefix": "engine",
+        "awslogs-region": {
+         "Ref": "AWS::Region"
+        }
+       }
+      },
+      "Name": "publish-flow-engine"
+     }
+    ],
+    "Cpu": "1024",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    },
+    "Family": "PublishFlowComputeStackPipelineTaskDefinition62385685",
+    "Memory": "2048",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/PipelineTaskDefinition/Resource"
+   }
+  },
+  "EngineLogGroup893F148F": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "RetentionInDays": 7
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/EngineLogGroup/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/12PQWvDMAyFf0vvjteFlZ1Lxspgh5COXofiqqkaxy623DCM//tI08ywk54+PfSkUpabV7lewegLdewLTa2MewbVCxj9d0RVyni4KlGdzKGuRB1aTWofWoM8sawaGxi/oNWYeWZb760iYLLmzyxqRzdgzDs+DKMzyDtgHOHnEfrotsygzgMaTgKVl7HSwTO6ybXId3AdTJG+f8MTGVoC/xNrGMigyywJgkHGxs4P3GttNan7GbNKQtvOy/hpu52z4TpNFp2SaNDb4BQmYewR5cU/3coX+byR69XFExUuGKYBZTPXX8ZhKCF8AQAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-3"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-4"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "il-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AWS::Region"
+      },
+      "us-west-2"
+     ]
+    }
+   ]
+  }
+ },
+ "Outputs": {
+  "ExportsOutputRefPipelineVpc0543904A37C48CA9": {
+   "Value": {
+    "Ref": "PipelineVpc0543904A"
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack:ExportsOutputRefPipelineVpc0543904A37C48CA9"
+   }
+  },
+  "ExportsOutputRefPipelineTaskDefinition5229ECC237A1363A": {
+   "Value": {
+    "Ref": "PipelineTaskDefinition5229ECC2"
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack:ExportsOutputRefPipelineTaskDefinition5229ECC237A1363A"
+   }
+  },
+  "ExportsOutputFnGetAttPublisherRoleFDE2F285ArnA7C18B09": {
+   "Value": {
+    "Fn::GetAtt": [
+     "PublisherRoleFDE2F285",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack:ExportsOutputFnGetAttPublisherRoleFDE2F285ArnA7C18B09"
+   }
+  },
+  "ExportsOutputFnGetAttPipelineCluster63B468F9Arn53941560": {
+   "Value": {
+    "Fn::GetAtt": [
+     "PipelineCluster63B468F9",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack:ExportsOutputFnGetAttPipelineCluster63B468F9Arn53941560"
+   }
+  },
+  "ExportsOutputRefPipelineVpcPublicSubnet1Subnet26FF83E251CB61BF": {
+   "Value": {
+    "Ref": "PipelineVpcPublicSubnet1Subnet26FF83E2"
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack:ExportsOutputRefPipelineVpcPublicSubnet1Subnet26FF83E251CB61BF"
+   }
+  },
+  "ExportsOutputRefPipelineVpcPublicSubnet2Subnet64F58E18EF3C34CF": {
+   "Value": {
+    "Ref": "PipelineVpcPublicSubnet2Subnet64F58E18"
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack:ExportsOutputRefPipelineVpcPublicSubnet2Subnet64F58E18EF3C34CF"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

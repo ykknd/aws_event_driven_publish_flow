@@ -1,0 +1,5 @@
+name = "Inventory Report"
+notebook = "process.ipynb"
+template = "template.pptx"
+supported_formats = ["pptx"]
+

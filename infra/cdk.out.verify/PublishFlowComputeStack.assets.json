@@ -1,0 +1,20 @@
+{
+  "version": "53.0.0",
+  "files": {
+    "0db1834b1de2814e42e97e7496faa990b013c82b2f8ea73a06b972fb0939b2a5": {
+      "displayName": "PublishFlowComputeStack Template",
+      "source": {
+        "path": "PublishFlowComputeStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-1aa5d77b": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "0db1834b1de2814e42e97e7496faa990b013c82b2f8ea73a06b972fb0939b2a5.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

@@ -1,0 +1,102 @@
+from __future__ import annotations
+
+import argparse
+import boto3
+import json
+import os
+import sys
+import tomllib
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Dummy readiness checker")
+    parser.add_argument("--job", help="Local path to a job TOML file")
+    parser.add_argument("--output", help="Local path for the readiness JSON output")
+    return parser.parse_args()
+
+
+def load_job(args: argparse.Namespace) -> tuple[dict[str, Any], str]:
+    if args.job:
+        path = Path(args.job)
+        return tomllib.loads(path.read_text(encoding="utf-8")), str(path)
+
+    job_bucket = os.environ.get("JOB_BUCKET")
+    job_key = os.environ.get("JOB_KEY")
+    if job_bucket and job_key:
+        s3 = boto3.client("s3")
+        payload = s3.get_object(Bucket=job_bucket, Key=job_key)["Body"].read().decode("utf-8")
+        return tomllib.loads(payload), job_key
+
+    job_path = os.environ.get("JOB_PATH")
+    if job_path:
+        path = Path(job_path)
+        return tomllib.loads(path.read_text(encoding="utf-8")), str(path)
+
+    raise SystemExit("A local job path is required for the dummy readiness checker")
+
+
+def simulated_available_targets(job: dict[str, Any]) -> list[str]:
+    targets_env = os.environ.get("SIMULATED_AVAILABLE_TARGETS")
+    if not targets_env:
+        return list(job.get("analysis_targets", []))
+    return [item.strip() for item in targets_env.split(",") if item.strip()]
+
+
+def write_local_output(result: dict[str, Any], output_path: Path) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+
+
+def persist_status(result: dict[str, Any]) -> None:
+    table_name = os.environ.get("JOB_STATE_TABLE")
+    if not table_name:
+        return
+
+    dynamodb = boto3.resource("dynamodb")
+    table = dynamodb.Table(table_name)
+    table.put_item(
+        Item={
+            "job_key": result["job_key"],
+            "job_id": result["job_id"],
+            "report_type": result["report_type"],
+            "ready": result["ready"],
+            "missing_targets": result["missing_targets"],
+            "checked_at": result["checked_at"],
+            "retry_count": result["retry_count"],
+            "readiness_query": result["readiness_query"],
+        }
+    )
+
+
+def main() -> int:
+    args = parse_args()
+    job, job_path = load_job(args)
+
+    expected_targets = list(job.get("analysis_targets", []))
+    available_targets = simulated_available_targets(job)
+    missing_targets = [target for target in expected_targets if target not in available_targets]
+
+    result = {
+        "job_id": job["job_id"],
+        "job_key": os.environ.get("JOB_KEY", job_path),
+        "report_type": job["report_type"],
+        "ready": not missing_targets,
+        "missing_targets": missing_targets,
+        "checked_at": datetime.now(timezone.utc).isoformat(),
+        "retry_count": int(os.environ.get("RETRY_COUNT", "0")),
+        "readiness_query": job.get("readiness_query", ""),
+    }
+
+    output_path = Path(args.output or os.environ.get("READINESS_OUTPUT_PATH", "tmp/readiness.json"))
+    write_local_output(result, output_path)
+    persist_status(result)
+
+    print(json.dumps(result))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
