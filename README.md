@@ -19,14 +19,23 @@ AWS 上でイベントドリブンな解析パイプラインを構築するた�
 cd infra
 npm install
 npm run build
-npm run synth
+npx cdk synth -c stage=staging
 ```
+
+本番環境の synth は次です。
+
+```bash
+cd infra
+npx cdk synth -c stage=prod
+```
+
+`stage` を省略した場合は `staging` が使われます。
 
 ECS タスクのイメージを既定の公開プレースホルダからローカルの `engine/Dockerfile` に切り替える場合は、次を実行します。
 
 ```bash
 cd infra
-npx cdk synth -c useDockerAsset=true
+npx cdk synth -c stage=staging -c useDockerAsset=true
 ```
 
 ### Engine
@@ -43,3 +52,5 @@ uv run python app/run_analysis.py --job ..\jobs\examples\inventory_report.toml
 - `check_readiness.py`、`run_analysis.py`、各レポートの Notebook はダミー実装です。
 - `template.pptx` はプレースホルダなので、既存実装の実ファイルに差し替えてください。
 - Step Functions は `Standard` を使うため、待機ループ中に ECS タスクは保持されません。
+- staging / prod は同一 AWS アカウント内で分離し、主要な物理名は `publish-flow-<stage>-<resource>` 形式で統一します。
+- 本番は保護を強めるため、主要ストレージ系リソースは `Retain` を使い、スタックの termination protection も有効にします。
