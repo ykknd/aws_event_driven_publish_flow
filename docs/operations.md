@@ -21,6 +21,57 @@
 - `prod` のスタックは termination protection を有効にします
 - `staging` は破棄しやすさを優先します
 
+## ネットワーク前提
+
+- ECS タスクは既存 VPC の private subnet に配置します
+- public subnet や public IP は使いません
+- 既存 VPC の S3 VPC endpoint を経由したアクセスを許可します
+- 社内ネットワークからの閲覧は CIDR ベースで許可します
+
+## Parameter Store で用意する値
+
+`staging`
+
+- `/publish-flow/staging/network/vpc-id`
+- `/publish-flow/staging/network/private-subnet-ids`
+- `/publish-flow/staging/network/s3-vpce-id`
+- `/publish-flow/staging/network/allowed-cidrs`
+
+`prod`
+
+- `/publish-flow/prod/network/vpc-id`
+- `/publish-flow/prod/network/private-subnet-ids`
+- `/publish-flow/prod/network/s3-vpce-id`
+- `/publish-flow/prod/network/allowed-cidrs`
+
+値の形式
+
+- `vpc-id`: `vpc-xxxxxxxx`
+- `private-subnet-ids`: `subnet-a,subnet-b,subnet-c`
+- `s3-vpce-id`: `vpce-xxxxxxxx`
+- `allowed-cidrs`: `203.0.113.10/32,203.0.113.0/24`
+
+## GitHub Variables / CDK context で直接渡す場合
+
+- `vpcId`
+- `privateSubnetIds`
+- `s3VpceId`
+- `allowedCidrs`
+
+例:
+
+```bash
+cd infra
+npx cdk synth \
+  -c stage=staging \
+  -c vpcId=vpc-xxxxxxxx \
+  -c privateSubnetIds=subnet-a,subnet-b \
+  -c s3VpceId=vpce-xxxxxxxx \
+  -c allowedCidrs=203.0.113.10/32,203.0.113.0/24
+```
+
+SSM に値がある場合は、context を省略するとそちらを参照します。
+
 ## ダミー資産の差し替え
 
 本番利用前に、次は既存実装の実ファイルへ差し替えてください。

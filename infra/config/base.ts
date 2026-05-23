@@ -4,6 +4,7 @@ import { AppConfig, Stage } from "./types";
 
 export function createBaseConfig(stage: Stage): AppConfig {
   const namePrefix = `publish-flow-${stage}`;
+  const networkParamPrefix = `/publish-flow/${stage}/network`;
 
   return {
     stage,
@@ -19,6 +20,10 @@ export function createBaseConfig(stage: Stage): AppConfig {
     taskDefinitionFamily: `${namePrefix}-engine`,
     containerName: `${namePrefix}-engine`,
     ruleName: `${namePrefix}-jobs-created`,
+    vpcIdParameterName: `${networkParamPrefix}/vpc-id`,
+    privateSubnetIdsParameterName: `${networkParamPrefix}/private-subnet-ids`,
+    s3VpcEndpointIdParameterName: `${networkParamPrefix}/s3-vpce-id`,
+    allowedCidrsParameterName: `${networkParamPrefix}/allowed-cidrs`,
     waitHours: 3,
     maxRetries: 80,
     isProduction: false,
@@ -27,4 +32,3 @@ export function createBaseConfig(stage: Stage): AppConfig {
     logRetention: logs.RetentionDays.ONE_WEEK,
   };
 }
-

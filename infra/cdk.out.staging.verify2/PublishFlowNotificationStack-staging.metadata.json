@@ -1,0 +1,104 @@
+{
+  "/PublishFlowNotificationStack-staging": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:22:22)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:stack-tags",
+      "data": [
+        {
+          "key": "Application",
+          "value": "publish_flow"
+        },
+        {
+          "key": "Stage",
+          "value": "staging"
+        }
+      ]
+    }
+  ],
+  "/PublishFlowNotificationStack-staging/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowNotificationStack-staging/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowNotificationStack-staging/PipelineNotifications/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineNotifications84B145AD"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Topic2 in aws-cdk-lib...",
+        "new NotificationStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\notification-stack.ts:12:18)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:22:22)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowNotificationStack-staging/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowNotificationStack-staging/CDKMetadata/Condition": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadataAvailable"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowNotificationStack-staging/Exports/Output{\"Ref\":\"PipelineNotifications84B145AD\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefPipelineNotifications84B145AD9732DCD9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ]
+}

@@ -38,6 +38,63 @@ cd infra
 npx cdk synth -c stage=staging -c useDockerAsset=true
 ```
 
+## 事前準備
+
+### Parameter Store
+
+各 stage で、少なくとも次の Parameter Store 項目を事前に作成してください。
+
+`staging`
+
+- `/publish-flow/staging/network/vpc-id`
+- `/publish-flow/staging/network/private-subnet-ids`
+- `/publish-flow/staging/network/s3-vpce-id`
+- `/publish-flow/staging/network/allowed-cidrs`
+
+`prod`
+
+- `/publish-flow/prod/network/vpc-id`
+- `/publish-flow/prod/network/private-subnet-ids`
+- `/publish-flow/prod/network/s3-vpce-id`
+- `/publish-flow/prod/network/allowed-cidrs`
+
+推奨する値の形式は次です。
+
+- `vpc-id`: `vpc-xxxxxxxx`
+- `private-subnet-ids`: `subnet-a,subnet-b,subnet-c`
+- `s3-vpce-id`: `vpce-xxxxxxxx`
+- `allowed-cidrs`: `203.0.113.10/32,203.0.113.0/24`
+
+### 既存ネットワークの前提
+
+- ECS タスクは既存 VPC の private subnet に配置します
+- ECS タスクに public IP は付与しません
+- S3 バケットの閲覧は、既存 S3 VPC endpoint 経由または社内 IP/CIDR からのみ許可します
+- そのため、既存 VPC 側に S3 VPC endpoint がある前提です
+
+### GitHub Variables
+
+GitHub Actions やローカル `cdk synth` では、SSM lookup の代わりに context で直接渡すこともできます。
+
+- `STAGE=staging`
+- `STAGE=prod`
+- `VPC_ID=vpc-xxxxxxxx`
+- `PRIVATE_SUBNET_IDS=subnet-a,subnet-b,subnet-c`
+- `S3_VPCE_ID=vpce-xxxxxxxx`
+- `ALLOWED_CIDRS=203.0.113.10/32,203.0.113.0/24`
+
+例:
+
+```bash
+cd infra
+npx cdk synth \
+  -c stage=staging \
+  -c vpcId=vpc-xxxxxxxx \
+  -c privateSubnetIds=subnet-a,subnet-b \
+  -c s3VpceId=vpce-xxxxxxxx \
+  -c allowedCidrs=203.0.113.10/32,203.0.113.0/24
+```
+
 ### Engine
 
 ```bash
@@ -54,3 +111,4 @@ uv run python app/run_analysis.py --job ..\jobs\examples\inventory_report.toml
 - Step Functions は `Standard` を使うため、待機ループ中に ECS タスクは保持されません。
 - staging / prod は同一 AWS アカウント内で分離し、主要な物理名は `publish-flow-<stage>-<resource>` 形式で統一します。
 - 本番は保護を強めるため、主要ストレージ系リソースは `Retain` を使い、スタックの termination protection も有効にします。
+- S3 の閲覧制限は `SourceVpce` と社内 CIDR の両方を使って制御します。

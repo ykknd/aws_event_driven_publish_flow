@@ -1,4 +1,5 @@
 import * as cdk from "aws-cdk-lib";
+import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as iam from "aws-cdk-lib/aws-iam";
@@ -23,8 +24,12 @@ export class OrchestrationStack extends cdk.Stack {
       integrationPattern: sfn.IntegrationPattern.RUN_JOB,
       cluster: props.cluster,
       taskDefinition: props.taskDefinition,
-      assignPublicIp: true,
+      assignPublicIp: false,
       launchTarget: new tasks.EcsFargateLaunchTarget(),
+      securityGroups: [props.taskSecurityGroup],
+      subnets: {
+        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+      },
       containerOverrides: [
         {
           containerDefinition: props.taskDefinition.defaultContainer!,
@@ -53,8 +58,12 @@ export class OrchestrationStack extends cdk.Stack {
       integrationPattern: sfn.IntegrationPattern.RUN_JOB,
       cluster: props.cluster,
       taskDefinition: props.taskDefinition,
-      assignPublicIp: true,
+      assignPublicIp: false,
       launchTarget: new tasks.EcsFargateLaunchTarget(),
+      securityGroups: [props.taskSecurityGroup],
+      subnets: {
+        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+      },
       containerOverrides: [
         {
           containerDefinition: props.taskDefinition.defaultContainer!,

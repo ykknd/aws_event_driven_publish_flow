@@ -1,0 +1,20 @@
+{
+  "version": "53.0.0",
+  "files": {
+    "5a080c613e1e7d84e6bb24e7ebfecdd94a112cc574f3de2bec39fceeff9eddc5": {
+      "displayName": "PublishFlowNotificationStack-prod Template",
+      "source": {
+        "path": "PublishFlowNotificationStack-prod.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-fd78bb6f": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "5a080c613e1e7d84e6bb24e7ebfecdd94a112cc574f3de2bec39fceeff9eddc5.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

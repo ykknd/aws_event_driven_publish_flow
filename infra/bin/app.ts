@@ -34,5 +34,6 @@ new OrchestrationStack(app, `PublishFlowOrchestrationStack-${config.stage}`, {
   cluster: compute.cluster,
   taskDefinition: compute.taskDefinition,
   containerName: compute.containerName,
+  taskSecurityGroup: compute.taskSecurityGroup,
   notificationTopic: notification.topic,
 });

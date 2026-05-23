@@ -17,6 +17,10 @@ export interface AppConfig {
   taskDefinitionFamily: string;
   containerName: string;
   ruleName: string;
+  vpcIdParameterName: string;
+  privateSubnetIdsParameterName: string;
+  s3VpcEndpointIdParameterName: string;
+  allowedCidrsParameterName: string;
   waitHours: number;
   maxRetries: number;
   isProduction: boolean;
@@ -24,4 +28,3 @@ export interface AppConfig {
   terminationProtection: boolean;
   logRetention: logs.RetentionDays;
 }
-
