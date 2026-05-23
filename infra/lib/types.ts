@@ -3,13 +3,7 @@ import * as ddb from "aws-cdk-lib/aws-dynamodb";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as sns from "aws-cdk-lib/aws-sns";
-
-export interface AppConfig {
-  stateMachineName: string;
-  waitHours: number;
-  maxRetries: number;
-  bucketNameSuffix: string;
-}
+import type { AppConfig } from "../config";
 
 export interface StackPropsWithConfig extends cdk.StackProps {
   config: AppConfig;

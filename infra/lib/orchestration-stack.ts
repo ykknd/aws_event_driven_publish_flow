@@ -86,22 +86,22 @@ export class OrchestrationStack extends cdk.Stack {
 
     const giveUp = new tasks.SnsPublish(this, "NotifyGiveUp", {
       topic: props.notificationTopic,
-      message: sfn.TaskInput.fromText("publish_flow job gave up after max retries"),
-      subject: "publish_flow give up",
+      message: sfn.TaskInput.fromText(`${props.config.namePrefix} job gave up after max retries`),
+      subject: `${props.config.namePrefix} give up`,
       resultPath: sfn.JsonPath.DISCARD,
     });
 
     const notifyFailure = new tasks.SnsPublish(this, "NotifyFailure", {
       topic: props.notificationTopic,
-      message: sfn.TaskInput.fromText("publish_flow workflow failed"),
-      subject: "publish_flow failure",
+      message: sfn.TaskInput.fromText(`${props.config.namePrefix} workflow failed`),
+      subject: `${props.config.namePrefix} failure`,
       resultPath: sfn.JsonPath.DISCARD,
     });
 
     const notifySuccess = new tasks.SnsPublish(this, "NotifySuccess", {
       topic: props.notificationTopic,
-      message: sfn.TaskInput.fromText("publish_flow workflow succeeded"),
-      subject: "publish_flow success",
+      message: sfn.TaskInput.fromText(`${props.config.namePrefix} workflow succeeded`),
+      subject: `${props.config.namePrefix} success`,
       resultPath: sfn.JsonPath.DISCARD,
     });
 
@@ -133,6 +133,7 @@ export class OrchestrationStack extends cdk.Stack {
     );
 
     const rule = new events.Rule(this, "JobCreatedRule", {
+      ruleName: props.config.ruleName,
       eventPattern: {
         source: ["aws.s3"],
         detailType: ["Object Created"],

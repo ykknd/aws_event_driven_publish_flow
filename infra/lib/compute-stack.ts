@@ -11,7 +11,7 @@ import { ComputeStackProps } from "./types";
 export class ComputeStack extends cdk.Stack {
   public readonly cluster: ecs.Cluster;
   public readonly taskDefinition: ecs.FargateTaskDefinition;
-  public readonly containerName = "publish-flow-engine";
+  public readonly containerName: string;
 
   constructor(scope: Construct, id: string, props: ComputeStackProps) {
     super(scope, id, props);
@@ -23,6 +23,7 @@ export class ComputeStack extends cdk.Stack {
 
     this.cluster = new ecs.Cluster(this, "PipelineCluster", {
       vpc,
+      clusterName: props.config.clusterName,
     });
 
     const publisherManagedPolicies = [
@@ -31,7 +32,7 @@ export class ComputeStack extends cdk.Stack {
     const publisherCustomPolicyStatements: iam.PolicyStatement[] = [];
 
     const publisherRole = new iam.Role(this, "PublisherRole", {
-      roleName: "publisher",
+      roleName: props.config.publisherRoleName,
       assumedBy: new iam.ServicePrincipal("ecs-tasks.amazonaws.com"),
       description: "Shared ECS task and execution role for publish_flow",
       managedPolicies: publisherManagedPolicies,
@@ -44,6 +45,7 @@ export class ComputeStack extends cdk.Stack {
     this.taskDefinition = new ecs.FargateTaskDefinition(this, "PipelineTaskDefinition", {
       memoryLimitMiB: 2048,
       cpu: 1024,
+      family: props.config.taskDefinitionFamily,
       taskRole: publisherRole,
       executionRole: publisherRole,
     });
@@ -57,9 +59,12 @@ export class ComputeStack extends cdk.Stack {
       : ecs.ContainerImage.fromRegistry("public.ecr.aws/docker/library/python:3.11-slim");
 
     const logGroup = new logs.LogGroup(this, "EngineLogGroup", {
-      retention: logs.RetentionDays.ONE_WEEK,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      logGroupName: props.config.logGroupName,
+      retention: props.config.logRetention,
+      removalPolicy: props.config.removalPolicy,
     });
+
+    this.containerName = props.config.containerName;
 
     this.taskDefinition.addContainer(this.containerName, {
       image,

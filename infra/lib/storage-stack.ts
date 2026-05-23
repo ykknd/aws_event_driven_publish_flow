@@ -12,17 +12,22 @@ export class StorageStack extends cdk.Stack {
     super(scope, id, props);
 
     this.artifactsBucket = new s3.Bucket(this, "ArtifactsBucket", {
+      bucketName: props.config.artifactsBucketName,
       eventBridgeEnabled: true,
-      autoDeleteObjects: true,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: !props.config.isProduction,
+      removalPolicy: props.config.removalPolicy,
       enforceSSL: true,
+      versioned: props.config.isProduction,
     });
 
     this.jobStateTable = new ddb.Table(this, "JobStateTable", {
+      tableName: props.config.jobStateTableName,
       partitionKey: { name: "job_key", type: ddb.AttributeType.STRING },
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      pointInTimeRecoverySpecification: props.config.isProduction
+        ? { pointInTimeRecoveryEnabled: true }
+        : undefined,
+      removalPolicy: props.config.removalPolicy,
     });
   }
 }
-

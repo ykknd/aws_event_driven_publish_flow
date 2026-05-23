@@ -1,0 +1,474 @@
+{
+  "/PublishFlowComputeStack-staging": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:24:17)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:stack-tags",
+      "data": [
+        {
+          "key": "Application",
+          "value": "publish_flow"
+        },
+        {
+          "key": "Stage",
+          "value": "staging"
+        }
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpc0543904A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:19:17)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:24:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/IGW": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcIGW3FA4A524"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:19:17)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:24:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/VPCGW": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcVPCGW3256101F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:19:17)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:24:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineCluster/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineCluster63B468F9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Cluster2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:24:20)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:24:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PublisherRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PublisherRoleFDE2F285"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Role2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:34:27)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:24:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineTaskDefinition/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineTaskDefinition5229ECC2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new FargateTaskDefinition2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:45:27)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:24:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/EngineLogGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "EngineLogGroup893F148F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new LogGroup2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:61:22)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:24:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/CDKMetadata/Condition": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadataAvailable"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Ref\":\"PipelineVpc0543904A\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefPipelineVpc0543904A37C48CA9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Ref\":\"PipelineTaskDefinition5229ECC2\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefPipelineTaskDefinition5229ECC237A1363A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Fn::GetAtt\":[\"PublisherRoleFDE2F285\",\"Arn\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttPublisherRoleFDE2F285ArnA7C18B09"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Fn::GetAtt\":[\"PipelineCluster63B468F9\",\"Arn\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttPipelineCluster63B468F9Arn53941560"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Ref\":\"PipelineVpcPublicSubnet1Subnet26FF83E2\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefPipelineVpcPublicSubnet1Subnet26FF83E251CB61BF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Ref\":\"PipelineVpcPublicSubnet2Subnet64F58E18\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefPipelineVpcPublicSubnet2Subnet64F58E18EF3C34CF"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/PublicSubnet1/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcPublicSubnet1Subnet26FF83E2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:257 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/PublicSubnet1/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcPublicSubnet1RouteTableE9A67515"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:257 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/PublicSubnet1/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcPublicSubnet1RouteTableAssociation6D13736B"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:257 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/PublicSubnet1/DefaultRoute": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcPublicSubnet1DefaultRoute44F3E91D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:197 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:19:17)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:24:17)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/PublicSubnet2/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcPublicSubnet2Subnet64F58E18"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:257 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/PublicSubnet2/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcPublicSubnet2RouteTable5219ED4D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:257 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/PublicSubnet2/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcPublicSubnet2RouteTableAssociation54D39738"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:257 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/PublicSubnet2/DefaultRoute": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcPublicSubnet2DefaultRoute04C861A0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:197 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...new Vpc2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:19:17)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:24:17)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/IsolatedSubnet1/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcIsolatedSubnet1SubnetA5CBCA8F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:262 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/IsolatedSubnet1/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcIsolatedSubnet1RouteTable48C0D549"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:262 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/IsolatedSubnet1/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcIsolatedSubnet1RouteTableAssociationC97F61F4"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:262 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/IsolatedSubnet2/Subnet": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcIsolatedSubnet2Subnet53783D14"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:262 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/IsolatedSubnet2/RouteTable": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcIsolatedSubnet2RouteTableE4FF0D15"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:262 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineVpc/IsolatedSubnet2/RouteTableAssociation": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineVpcIsolatedSubnet2RouteTableAssociationF3E1A5D0"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:262 in aws-cdk-lib...",
+        "Array.forEach (:)",
+        "...aws-cdk-lib..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PublisherRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PublisherRoleDefaultPolicy04D6B219"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ]
+}

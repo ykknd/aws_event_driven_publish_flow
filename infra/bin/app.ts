@@ -1,29 +1,34 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
-import { defaultConfig } from "../config/default";
+import { resolveConfig } from "../config";
 import { StorageStack } from "../lib/storage-stack";
 import { NotificationStack } from "../lib/notification-stack";
 import { ComputeStack } from "../lib/compute-stack";
 import { OrchestrationStack } from "../lib/orchestration-stack";
 
 const app = new cdk.App();
+const config = resolveConfig(app.node.tryGetContext("stage"));
 
-const storage = new StorageStack(app, "PublishFlowStorageStack", {
-  config: defaultConfig,
-});
+cdk.Tags.of(app).add("Application", "publish_flow");
+cdk.Tags.of(app).add("Stage", config.stage);
 
-const notification = new NotificationStack(app, "PublishFlowNotificationStack", {
-  config: defaultConfig,
-});
+const commonStackProps = {
+  config,
+  terminationProtection: config.terminationProtection,
+};
 
-const compute = new ComputeStack(app, "PublishFlowComputeStack", {
-  config: defaultConfig,
+const storage = new StorageStack(app, `PublishFlowStorageStack-${config.stage}`, commonStackProps);
+
+const notification = new NotificationStack(app, `PublishFlowNotificationStack-${config.stage}`, commonStackProps);
+
+const compute = new ComputeStack(app, `PublishFlowComputeStack-${config.stage}`, {
+  ...commonStackProps,
   artifactsBucket: storage.artifactsBucket,
   jobStateTable: storage.jobStateTable,
 });
 
-new OrchestrationStack(app, "PublishFlowOrchestrationStack", {
-  config: defaultConfig,
+new OrchestrationStack(app, `PublishFlowOrchestrationStack-${config.stage}`, {
+  ...commonStackProps,
   artifactsBucket: storage.artifactsBucket,
   jobStateTable: storage.jobStateTable,
   cluster: compute.cluster,
@@ -31,4 +36,3 @@ new OrchestrationStack(app, "PublishFlowOrchestrationStack", {
   containerName: compute.containerName,
   notificationTopic: notification.topic,
 });
-

@@ -1,0 +1,20 @@
+{
+  "version": "53.0.0",
+  "files": {
+    "668e5e3b752c1f7658e67476a162d777cba8df3f902205df9b6fcdf0ea033f44": {
+      "displayName": "PublishFlowOrchestrationStack-staging Template",
+      "source": {
+        "path": "PublishFlowOrchestrationStack-staging.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-1309fc29": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "668e5e3b752c1f7658e67476a162d777cba8df3f902205df9b6fcdf0ea033f44.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

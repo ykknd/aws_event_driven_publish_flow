@@ -1,0 +1,20 @@
+{
+  "version": "53.0.0",
+  "files": {
+    "6a93573999d78bf8c7863b7bb927b007617479fc1258ffd906767731e6889afd": {
+      "displayName": "PublishFlowStorageStack-prod Template",
+      "source": {
+        "path": "PublishFlowStorageStack-prod.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-5db4cf34": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "6a93573999d78bf8c7863b7bb927b007617479fc1258ffd906767731e6889afd.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

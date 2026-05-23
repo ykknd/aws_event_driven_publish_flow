@@ -10,8 +10,8 @@ export class NotificationStack extends cdk.Stack {
     super(scope, id, props);
 
     this.topic = new sns.Topic(this, "PipelineNotifications", {
-      displayName: "publish-flow notifications",
+      topicName: props.config.notificationTopicName,
+      displayName: props.config.notificationDisplayName,
     });
   }
 }
-

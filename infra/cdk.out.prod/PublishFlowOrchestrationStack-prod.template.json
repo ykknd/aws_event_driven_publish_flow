@@ -1,0 +1,859 @@
+{
+ "Resources": {
+  "RunReadinessCheckSecurityGroup84681C38": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "PublishFlowOrchestrationStack-prod/RunReadinessCheck/SecurityGroup",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "prod"
+     }
+    ],
+    "VpcId": {
+     "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineVpc0543904A37C48CA9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowOrchestrationStack-prod/RunReadinessCheck/SecurityGroup/Resource"
+   }
+  },
+  "RunAnalysisSecurityGroup6B81789C": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "PublishFlowOrchestrationStack-prod/RunAnalysis/SecurityGroup",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "prod"
+     }
+    ],
+    "VpcId": {
+     "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineVpc0543904A37C48CA9"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowOrchestrationStack-prod/RunAnalysis/SecurityGroup/Resource"
+   }
+  },
+  "PublishFlowStateMachineRole79818C8A": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "states.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "prod"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowOrchestrationStack-prod/PublishFlowStateMachine/Role/Resource"
+   }
+  },
+  "PublishFlowStateMachineRoleDefaultPolicyFA4F84C8": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "ecs:RunTask",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Fn::Select": [
+            1,
+            {
+             "Fn::Split": [
+              ":",
+              {
+               "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineTaskDefinition5229ECC237A1363A"
+              }
+             ]
+            }
+           ]
+          },
+          ":",
+          {
+           "Fn::Select": [
+            2,
+            {
+             "Fn::Split": [
+              ":",
+              {
+               "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineTaskDefinition5229ECC237A1363A"
+              }
+             ]
+            }
+           ]
+          },
+          ":",
+          {
+           "Fn::Select": [
+            3,
+            {
+             "Fn::Split": [
+              ":",
+              {
+               "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineTaskDefinition5229ECC237A1363A"
+              }
+             ]
+            }
+           ]
+          },
+          ":",
+          {
+           "Fn::Select": [
+            4,
+            {
+             "Fn::Split": [
+              ":",
+              {
+               "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineTaskDefinition5229ECC237A1363A"
+              }
+             ]
+            }
+           ]
+          },
+          ":",
+          {
+           "Fn::Select": [
+            0,
+            {
+             "Fn::Split": [
+              "/",
+              {
+               "Fn::Select": [
+                5,
+                {
+                 "Fn::Split": [
+                  ":",
+                  {
+                   "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineTaskDefinition5229ECC237A1363A"
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          "/",
+          {
+           "Fn::Select": [
+            1,
+            {
+             "Fn::Split": [
+              "/",
+              {
+               "Fn::Select": [
+                5,
+                {
+                 "Fn::Split": [
+                  ":",
+                  {
+                   "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineTaskDefinition5229ECC237A1363A"
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          ":*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "ecs:StopTask",
+        "ecs:DescribeTasks"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": "iam:PassRole",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputFnGetAttPublisherRoleFDE2F285ArnA7C18B09"
+       }
+      },
+      {
+       "Action": [
+        "events:PutTargets",
+        "events:PutRule",
+        "events:DescribeRule"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":events:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":rule/StepFunctionsGetEventsForECSTaskRule"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": "dynamodb:GetItem",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":dynamodb:",
+          {
+           "Ref": "AWS::Region"
+          },
+          ":",
+          {
+           "Ref": "AWS::AccountId"
+          },
+          ":table/",
+          {
+           "Fn::ImportValue": "PublishFlowStorageStack-prod:ExportsOutputRefJobStateTable8E120B77111DC2CE"
+          }
+         ]
+        ]
+       }
+      },
+      {
+       "Action": "sns:Publish",
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::ImportValue": "PublishFlowNotificationStack-prod:ExportsOutputRefPipelineNotifications84B145AD9732DCD9"
+       }
+      },
+      {
+       "Action": [
+        "events:PutTargets",
+        "events:PutRule",
+        "events:DescribeRule"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PublishFlowStateMachineRoleDefaultPolicyFA4F84C8",
+    "Roles": [
+     {
+      "Ref": "PublishFlowStateMachineRole79818C8A"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowOrchestrationStack-prod/PublishFlowStateMachine/Role/DefaultPolicy/Resource"
+   }
+  },
+  "PublishFlowStateMachine500CD75E": {
+   "Type": "AWS::StepFunctions::StateMachine",
+   "Properties": {
+    "DefinitionString": {
+     "Fn::Join": [
+      "",
+      [
+       "{\"StartAt\":\"LoadContext\",\"States\":{\"LoadContext\":{\"Type\":\"Pass\",\"Parameters\":{\"bucket.$\":\"$.detail.bucket.name\",\"job_key.$\":\"$.detail.object.key\",\"retry_count\":0},\"Next\":\"RunReadinessCheck\"},\"RunReadinessCheck\":{\"Next\":\"FetchJobStatus\",\"Type\":\"Task\",\"ResultPath\":null,\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::ecs:runTask.sync\",\"Parameters\":{\"Cluster\":\"",
+       {
+        "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputFnGetAttPipelineCluster63B468F9Arn53941560"
+       },
+       "\",\"TaskDefinition\":\"publish-flow-prod-engine\",\"NetworkConfiguration\":{\"AwsvpcConfiguration\":{\"AssignPublicIp\":\"ENABLED\",\"Subnets\":[\"",
+       {
+        "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineVpcPublicSubnet1Subnet26FF83E251CB61BF"
+       },
+       "\",\"",
+       {
+        "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineVpcPublicSubnet2Subnet64F58E18EF3C34CF"
+       },
+       "\"],\"SecurityGroups\":[\"",
+       {
+        "Fn::GetAtt": [
+         "RunReadinessCheckSecurityGroup84681C38",
+         "GroupId"
+        ]
+       },
+       "\"]}},\"Overrides\":{\"ContainerOverrides\":[{\"Name\":\"publish-flow-prod-engine\",\"Command\":[\"python\",\"/app/engine/app/check_readiness.py\"],\"Environment\":[{\"Name\":\"JOB_BUCKET\",\"Value.$\":\"$.bucket\"},{\"Name\":\"JOB_KEY\",\"Value.$\":\"$.job_key\"},{\"Name\":\"RETRY_COUNT\",\"Value.$\":\"$.retry_count\"},{\"Name\":\"READINESS_OUTPUT_PATH\",\"Value\":\"/tmp/readiness.json\"},{\"Name\":\"JOB_STATE_TABLE\",\"Value\":\"",
+       {
+        "Fn::ImportValue": "PublishFlowStorageStack-prod:ExportsOutputRefJobStateTable8E120B77111DC2CE"
+       },
+       "\"}]}]},\"LaunchType\":\"FARGATE\"}},\"FetchJobStatus\":{\"Next\":\"InputsReady\",\"Type\":\"Task\",\"ResultPath\":\"$.status\",\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::dynamodb:getItem\",\"Parameters\":{\"Key\":{\"job_key\":{\"S.$\":\"$.job_key\"}},\"TableName\":\"",
+       {
+        "Fn::ImportValue": "PublishFlowStorageStack-prod:ExportsOutputRefJobStateTable8E120B77111DC2CE"
+       },
+       "\",\"ConsistentRead\":false}},\"InputsReady\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.status.Item.ready.BOOL\",\"BooleanEquals\":true,\"Next\":\"RunAnalysis\"}],\"Default\":\"Wait3Hours\"},\"Wait3Hours\":{\"Type\":\"Wait\",\"Seconds\":10800,\"Next\":\"IncrementRetryCount\"},\"IncrementRetryCount\":{\"Type\":\"Pass\",\"Parameters\":{\"bucket.$\":\"$.bucket\",\"job_key.$\":\"$.job_key\",\"status.$\":\"$.status\",\"retry_count.$\":\"States.MathAdd($.retry_count, 1)\"},\"Next\":\"RetryLimitReached\"},\"RetryLimitReached\":{\"Type\":\"Choice\",\"Choices\":[{\"Variable\":\"$.retry_count\",\"NumericGreaterThanEquals\":80,\"Next\":\"NotifyGiveUp\"}],\"Default\":\"RunReadinessCheck\"},\"NotifyGiveUp\":{\"End\":true,\"Type\":\"Task\",\"ResultPath\":null,\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::sns:publish\",\"Parameters\":{\"TopicArn\":\"",
+       {
+        "Fn::ImportValue": "PublishFlowNotificationStack-prod:ExportsOutputRefPipelineNotifications84B145AD9732DCD9"
+       },
+       "\",\"Message\":\"publish-flow-prod job gave up after max retries\",\"Subject\":\"publish-flow-prod give up\"}},\"RunAnalysis\":{\"Next\":\"NotifySuccess\",\"Type\":\"Task\",\"ResultPath\":null,\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::ecs:runTask.sync\",\"Parameters\":{\"Cluster\":\"",
+       {
+        "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputFnGetAttPipelineCluster63B468F9Arn53941560"
+       },
+       "\",\"TaskDefinition\":\"publish-flow-prod-engine\",\"NetworkConfiguration\":{\"AwsvpcConfiguration\":{\"AssignPublicIp\":\"ENABLED\",\"Subnets\":[\"",
+       {
+        "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineVpcPublicSubnet1Subnet26FF83E251CB61BF"
+       },
+       "\",\"",
+       {
+        "Fn::ImportValue": "PublishFlowComputeStack-prod:ExportsOutputRefPipelineVpcPublicSubnet2Subnet64F58E18EF3C34CF"
+       },
+       "\"],\"SecurityGroups\":[\"",
+       {
+        "Fn::GetAtt": [
+         "RunAnalysisSecurityGroup6B81789C",
+         "GroupId"
+        ]
+       },
+       "\"]}},\"Overrides\":{\"ContainerOverrides\":[{\"Name\":\"publish-flow-prod-engine\",\"Command\":[\"python\",\"/app/engine/app/run_analysis.py\"],\"Environment\":[{\"Name\":\"JOB_BUCKET\",\"Value.$\":\"$.bucket\"},{\"Name\":\"JOB_KEY\",\"Value.$\":\"$.job_key\"},{\"Name\":\"OUTPUT_BUCKET\",\"Value\":\"",
+       {
+        "Fn::ImportValue": "PublishFlowStorageStack-prod:ExportsOutputRefArtifactsBucket2AAC55442DB5E6C9"
+       },
+       "\"},{\"Name\":\"OUTPUT_PREFIX\",\"Value.$\":\"States.Format('outputs/{}', $.status.Item.job_id.S)\"},{\"Name\":\"JOB_STATE_TABLE\",\"Value\":\"",
+       {
+        "Fn::ImportValue": "PublishFlowStorageStack-prod:ExportsOutputRefJobStateTable8E120B77111DC2CE"
+       },
+       "\"}]}]},\"LaunchType\":\"FARGATE\"}},\"NotifySuccess\":{\"End\":true,\"Type\":\"Task\",\"ResultPath\":null,\"Resource\":\"arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":states:::sns:publish\",\"Parameters\":{\"TopicArn\":\"",
+       {
+        "Fn::ImportValue": "PublishFlowNotificationStack-prod:ExportsOutputRefPipelineNotifications84B145AD9732DCD9"
+       },
+       "\",\"Message\":\"publish-flow-prod workflow succeeded\",\"Subject\":\"publish-flow-prod success\"}}},\"TimeoutSeconds\":950400}"
+      ]
+     ]
+    },
+    "RoleArn": {
+     "Fn::GetAtt": [
+      "PublishFlowStateMachineRole79818C8A",
+      "Arn"
+     ]
+    },
+    "StateMachineName": "publish-flow-prod-state-machine",
+    "StateMachineType": "STANDARD",
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "prod"
+     }
+    ]
+   },
+   "DependsOn": [
+    "PublishFlowStateMachineRoleDefaultPolicyFA4F84C8",
+    "PublishFlowStateMachineRole79818C8A"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowOrchestrationStack-prod/PublishFlowStateMachine/Resource"
+   }
+  },
+  "PublishFlowStateMachineEventsRole76217CF5": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "events.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "prod"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowOrchestrationStack-prod/PublishFlowStateMachine/EventsRole/Resource"
+   }
+  },
+  "PublishFlowStateMachineEventsRoleDefaultPolicyB2073D4C": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "states:StartExecution",
+       "Effect": "Allow",
+       "Resource": {
+        "Ref": "PublishFlowStateMachine500CD75E"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PublishFlowStateMachineEventsRoleDefaultPolicyB2073D4C",
+    "Roles": [
+     {
+      "Ref": "PublishFlowStateMachineEventsRole76217CF5"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowOrchestrationStack-prod/PublishFlowStateMachine/EventsRole/DefaultPolicy/Resource"
+   }
+  },
+  "JobCreatedRule66FA07CA": {
+   "Type": "AWS::Events::Rule",
+   "Properties": {
+    "EventPattern": {
+     "source": [
+      "aws.s3"
+     ],
+     "detail-type": [
+      "Object Created"
+     ],
+     "detail": {
+      "bucket": {
+       "name": [
+        {
+         "Fn::ImportValue": "PublishFlowStorageStack-prod:ExportsOutputRefArtifactsBucket2AAC55442DB5E6C9"
+        }
+       ]
+      },
+      "object": {
+       "key": [
+        {
+         "prefix": "jobs/"
+        }
+       ]
+      }
+     }
+    },
+    "Name": "publish-flow-prod-jobs-created",
+    "State": "ENABLED",
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "prod"
+     }
+    ],
+    "Targets": [
+     {
+      "Arn": {
+       "Ref": "PublishFlowStateMachine500CD75E"
+      },
+      "Id": "Target0",
+      "RoleArn": {
+       "Fn::GetAtt": [
+        "PublishFlowStateMachineEventsRole76217CF5",
+        "Arn"
+       ]
+      }
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowOrchestrationStack-prod/JobCreatedRule/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1VNzWrCQBB+Fu+TqQ2VPoAt0kMhJIUeZVxHMmazK5lZJSz77qWxB3v6fvh+aqw3r7he0U0rdxwqLwfMnZEbgG66z2p8OaXgTGJQzA2pwjeJwbaP4hg6I+NPcr0Ehu0pPOoC/9p7Ix0U87vTNoUv0gHe5kBj3LF9GI/QBW3SwYv2BdjVmDt2aRKbd1NMl2X90SggNGJuo1+eF2yiFzf/yjsrwFcOppjb9BdLnkspEOKR8axP1/oFnze4Xp1VpJpSMBkZ2zv+ACEJ1nIeAQAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowOrchestrationStack-prod/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-3"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-4"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "il-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AWS::Region"
+      },
+      "us-west-2"
+     ]
+    }
+   ]
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
