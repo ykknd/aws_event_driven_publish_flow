@@ -179,3 +179,46 @@ uv run python app/run_analysis.py --job ..\jobs\examples\inventory_report.toml
   - `large`: 21-50 件, `16 vCPU / 80 GiB`
   - `max`: 51 件以上, `16 vCPU / 104 GiB`
 - この切り替えは `check_readiness.py` が TOML を読んだ時点で判定し、Step Functions が該当サイズの task definition を選びます。
+
+## Playbooks
+
+詳細な実務手順は次を参照してください。
+
+- `docs/playbooks/environment-setup.md`
+- `docs/playbooks/local-validation.md`
+- `docs/playbooks/job-authoring.md`
+- `docs/playbooks/pipeline-operations.md`
+- `docs/playbooks/troubleshooting.md`
+
+## GitHub Copilot Skills
+
+repo 固有の GitHub Copilot skill は `.github/skills/` に置いています。
+
+- `setup-environment`
+- `run-local-checks`
+- `author-job-toml`
+- `operate-pipeline`
+- `debug-failures`
+- `swap-in-real-assets`
+
+### 推奨する実行順
+
+通常は次の順で使う想定です。
+
+1. `setup-environment`
+   - SSM Parameter Store、既存 VPC/private subnet、S3 VPCE、SES sender などの前提をそろえる
+2. `run-local-checks`
+   - `npm run build`、`cdk synth`、`pytest`、sample TOML 実行でローカル確認を行う
+3. `author-job-toml`
+   - `job_id`、`type_name`、`purpose`、`analysis_targets`、`notification` を含むジョブ TOML を作る
+4. `operate-pipeline`
+   - S3 `jobs/` への配置、Step Functions 実行、S3 出力、SES 通知を確認する
+5. `debug-failures`
+   - readiness 未充足、Athena、SES、S3 制限、private subnet 到達性などの障害を切り分ける
+6. `swap-in-real-assets`
+   - ダミー `check_readiness.py`、`run_analysis.py`、Notebook、Dockerfile を既存資産へ差し替える
+
+補足です。
+
+- `debug-failures` は通常フローの途中で問題が出たときに割り込んで使います
+- `swap-in-real-assets` は初期セットアップ後、雛形から本実装へ移る段階で使います
