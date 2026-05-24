@@ -2,7 +2,6 @@
 import * as cdk from "aws-cdk-lib";
 import { resolveConfig } from "../config";
 import { StorageStack } from "../lib/storage-stack";
-import { NotificationStack } from "../lib/notification-stack";
 import { ComputeStack } from "../lib/compute-stack";
 import { OrchestrationStack } from "../lib/orchestration-stack";
 
@@ -19,8 +18,6 @@ const commonStackProps = {
 
 const storage = new StorageStack(app, `PublishFlowStorageStack-${config.stage}`, commonStackProps);
 
-const notification = new NotificationStack(app, `PublishFlowNotificationStack-${config.stage}`, commonStackProps);
-
 const compute = new ComputeStack(app, `PublishFlowComputeStack-${config.stage}`, {
   ...commonStackProps,
   artifactsBucket: storage.artifactsBucket,
@@ -32,7 +29,8 @@ new OrchestrationStack(app, `PublishFlowOrchestrationStack-${config.stage}`, {
   artifactsBucket: storage.artifactsBucket,
   jobStateTable: storage.jobStateTable,
   cluster: compute.cluster,
-  taskDefinition: compute.taskDefinition,
+  readinessTaskDefinition: compute.readinessTaskDefinition,
+  analysisTaskDefinitions: compute.analysisTaskDefinitions,
   containerName: compute.containerName,
-  notificationTopic: notification.topic,
+  taskSecurityGroup: compute.taskSecurityGroup,
 });

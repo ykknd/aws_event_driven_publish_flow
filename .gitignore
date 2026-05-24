@@ -11,3 +11,5 @@ dist/
 outputs/
 tmp/
 
+# Ignore AWS CDK context files
+*/.tmp/*

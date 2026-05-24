@@ -1,0 +1,290 @@
+{
+  "/PublishFlowStorageStack-staging": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:19:17)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:stack-tags",
+      "data": [
+        {
+          "key": "Application",
+          "value": "publish_flow"
+        },
+        {
+          "key": "Stage",
+          "value": "staging"
+        }
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/Custom::S3AutoDeleteObjectsCustomResourceProvider": [
+    {
+      "type": "aws:cdk:is-custom-resource-handler-customResourceProvider",
+      "data": true
+    }
+  ],
+  "/PublishFlowStorageStack-staging/JobStateTable": [
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "JobStateTable8E120B77"
+      }
+    }
+  ],
+  "/PublishFlowStorageStack-staging/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/ArtifactsBucket/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ArtifactsBucket2AAC5544"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new StorageStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\storage-stack.ts:27:28)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:19:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketAutoDeleteObjects"
+      }
+    }
+  ],
+  "/PublishFlowStorageStack-staging/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db8347ECC3691"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/JobStateTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JobStateTable8E120B77"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Table2 in aws-cdk-lib...",
+        "new StorageStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\storage-stack.ts:36:26)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:19:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/CDKMetadata/Condition": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadataAvailable"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/Exports/Output{\"Fn::GetAtt\":[\"ArtifactsBucket2AAC5544\",\"Arn\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttArtifactsBucket2AAC5544ArnD57FAE19"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/Exports/Output{\"Fn::GetAtt\":[\"JobStateTable8E120B77\",\"Arn\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttJobStateTable8E120B77Arn125B2001"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/Exports/Output{\"Ref\":\"JobStateTable8E120B77\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefJobStateTable8E120B77111DC2CE"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/Exports/Output{\"Ref\":\"ArtifactsBucket2AAC5544\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefArtifactsBucket2AAC55442DB5E6C9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/ArtifactsBucket/Policy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ArtifactsBucketPolicy852CB646"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new StorageStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\storage-stack.ts:27:28)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:19:17)"
+      ]
+    },
+    {
+      "type": "aws:cdk:analytics:mixin",
+      "data": {
+        "mixin": "aws-cdk-lib.aws_s3.mixins.BucketPolicyStatements"
+      }
+    }
+  ],
+  "/PublishFlowStorageStack-staging/ArtifactsBucket/AutoDeleteObjectsCustomResource/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ArtifactsBucketAutoDeleteObjectsCustomResource0E3B4320"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/ArtifactsBucket/Notifications/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ArtifactsBucketNotifications748A84A6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Bucket2 in aws-cdk-lib...",
+        "new StorageStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\storage-stack.ts:27:28)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:19:17)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/BucketNotificationsHandler050a0587b7544547bf325f094a3db834/Role/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BucketNotificationsHandler050a0587b7544547bf325f094a3db834RoleB6FB88EC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowStorageStack-staging/ArtifactsBucket/Notifications/HandlerPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ArtifactsBucketNotificationsHandlerPolicy80029502"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ]
+}

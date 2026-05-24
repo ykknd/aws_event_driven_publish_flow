@@ -1,0 +1,162 @@
+{
+  "/PublishFlowOrchestrationStack-prod": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:30:1)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:stack-tags",
+      "data": [
+        {
+          "key": "Application",
+          "value": "publish_flow"
+        },
+        {
+          "key": "Stage",
+          "value": "prod"
+        }
+      ]
+    }
+  ],
+  "/PublishFlowOrchestrationStack-prod/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowOrchestrationStack-prod/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowOrchestrationStack-prod/PublishFlowStateMachine/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PublishFlowStateMachine500CD75E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new StateMachine2 in aws-cdk-lib...",
+        "new OrchestrationStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\orchestration-stack.ts:130:26)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:30:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowOrchestrationStack-prod/JobCreatedRule/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "JobCreatedRule66FA07CA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Rule2 in aws-cdk-lib...",
+        "new OrchestrationStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\orchestration-stack.ts:144:18)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:30:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowOrchestrationStack-prod/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowOrchestrationStack-prod/CDKMetadata/Condition": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadataAvailable"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowOrchestrationStack-prod/PublishFlowStateMachine/Role/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PublishFlowStateMachineRole79818C8A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new StateMachine2 in aws-cdk-lib...",
+        "new OrchestrationStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\orchestration-stack.ts:130:26)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:30:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowOrchestrationStack-prod/PublishFlowStateMachine/EventsRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PublishFlowStateMachineEventsRole76217CF5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new SfnStateMachine in aws-cdk-lib...",
+        "new OrchestrationStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\orchestration-stack.ts:160:20)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:30:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowOrchestrationStack-prod/PublishFlowStateMachine/Role/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PublishFlowStateMachineRoleDefaultPolicyFA4F84C8"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new StateMachine2 in aws-cdk-lib...",
+        "new OrchestrationStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\orchestration-stack.ts:130:26)"
+      ]
+    }
+  ],
+  "/PublishFlowOrchestrationStack-prod/PublishFlowStateMachine/EventsRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PublishFlowStateMachineEventsRoleDefaultPolicyB2073D4C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new SfnStateMachine in aws-cdk-lib...",
+        "new OrchestrationStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\orchestration-stack.ts:160:20)"
+      ]
+    }
+  ]
+}

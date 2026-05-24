@@ -7,7 +7,7 @@ import os
 import shutil
 import sys
 import tomllib
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -52,6 +52,17 @@ def load_report_config(report_dir: Path) -> dict[str, Any]:
     return tomllib.loads((report_dir / "report.toml").read_text(encoding="utf-8"))
 
 
+def build_output_prefix(job: dict[str, Any]) -> str:
+    return f"outputs/{job['type_name']}/{job['purpose']}/{job['job_id']}"
+
+
+def output_prefix_to_local_path(output_prefix: str) -> Path:
+    parts = output_prefix.split("/")
+    if parts and parts[0] == "outputs":
+        parts = parts[1:]
+    return Path(*parts)
+
+
 def detect_workspace_root(explicit: str | None) -> Path:
     if explicit:
         return Path(explicit).resolve()
@@ -87,13 +98,14 @@ def execute_notebook(notebook_path: Path, artifact_dir: Path, job_context_path: 
 
 
 def upload_local_artifacts(
-    job_id: str, artifact_dir: Path, rendered_dir: Path, output_root: Path
+    output_prefix: str, artifact_dir: Path, rendered_dir: Path, output_root: Path
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     artifacts: list[dict[str, Any]] = []
     rendered_outputs: list[dict[str, Any]] = []
 
-    artifact_target = output_root / job_id / "artifacts"
-    rendered_target = output_root / job_id / "rendered"
+    prefix_path = output_prefix_to_local_path(output_prefix)
+    artifact_target = output_root / prefix_path / "artifacts"
+    rendered_target = output_root / prefix_path / "rendered"
     artifact_target.mkdir(parents=True, exist_ok=True)
     rendered_target.mkdir(parents=True, exist_ok=True)
 
@@ -105,7 +117,7 @@ def upload_local_artifacts(
                 "kind": path.suffix.lstrip("."),
                 "label": path.stem.replace("_", " ").title(),
                 "local_path": str(copied.resolve()),
-                "s3_key": f"outputs/{job_id}/artifacts/{path.name}",
+                "s3_key": f"{output_prefix}/artifacts/{path.name}",
             }
         )
 
@@ -117,7 +129,7 @@ def upload_local_artifacts(
                 "kind": path.suffix.lstrip("."),
                 "label": path.stem.replace("_", " ").title(),
                 "local_path": str(copied.resolve()),
-                "s3_key": f"outputs/{job_id}/rendered/{path.name}",
+                "s3_key": f"{output_prefix}/rendered/{path.name}",
             }
         )
 
@@ -137,22 +149,52 @@ def upload_outputs_to_s3(bucket: str, prefix: str, artifacts: list[dict[str, Any
     s3.upload_file(str(manifest_path), bucket, f"{prefix}/manifest.json")
 
 
-def persist_job_state(job_key: str, manifest_s3_key: str, rendered_outputs: list[dict[str, Any]]) -> None:
+def build_presigned_url(bucket: str, rendered_outputs: list[dict[str, Any]], expires_in: int) -> tuple[str | None, str | None]:
+    pptx_output = next((output for output in rendered_outputs if output["kind"] == "pptx"), None)
+    if not pptx_output:
+        return None, None
+
+    s3 = boto3.client("s3")
+    url = s3.generate_presigned_url(
+        "get_object",
+        Params={"Bucket": bucket, "Key": pptx_output["s3_key"]},
+        ExpiresIn=expires_in,
+    )
+    return pptx_output["s3_key"], url
+
+
+def persist_job_state(
+    job_key: str,
+    manifest_s3_key: str,
+    rendered_outputs: list[dict[str, Any]],
+    pptx_s3_key: str | None,
+    pptx_presigned_url: str | None,
+    pptx_presigned_url_expires_at: str | None,
+) -> None:
     table_name = os.environ.get("JOB_STATE_TABLE")
     if not table_name:
         return
 
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(table_name)
+    expression_values: dict[str, Any] = {
+        ":status": "completed",
+        ":manifest_s3_key": manifest_s3_key,
+        ":rendered_outputs": rendered_outputs,
+    }
+    update_expression = "SET #status = :status, manifest_s3_key = :manifest_s3_key, rendered_outputs = :rendered_outputs"
+
+    if pptx_s3_key and pptx_presigned_url and pptx_presigned_url_expires_at:
+        expression_values[":pptx_s3_key"] = pptx_s3_key
+        expression_values[":pptx_presigned_url"] = pptx_presigned_url
+        expression_values[":pptx_presigned_url_expires_at"] = pptx_presigned_url_expires_at
+        update_expression += ", pptx_s3_key = :pptx_s3_key, pptx_presigned_url = :pptx_presigned_url, pptx_presigned_url_expires_at = :pptx_presigned_url_expires_at"
+
     table.update_item(
         Key={"job_key": job_key},
-        UpdateExpression="SET #status = :status, manifest_s3_key = :manifest_s3_key, rendered_outputs = :rendered_outputs",
+        UpdateExpression=update_expression,
         ExpressionAttributeNames={"#status": "status"},
-        ExpressionAttributeValues={
-            ":status": "completed",
-            ":manifest_s3_key": manifest_s3_key,
-            ":rendered_outputs": rendered_outputs,
-        },
+        ExpressionAttributeValues=expression_values,
     )
 
 
@@ -160,6 +202,8 @@ def build_manifest(job: dict[str, Any], artifacts: list[dict[str, Any]], rendere
     return {
         "job_id": job["job_id"],
         "report_type": job["report_type"],
+        "type_name": job["type_name"],
+        "purpose": job["purpose"],
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "artifacts": artifacts,
         "rendered_outputs": rendered_outputs,
@@ -172,6 +216,7 @@ def main() -> int:
     workspace = detect_workspace_root(args.workspace)
     runtime_root = Path.cwd().resolve()
     job, job_reference = load_job_from_env(args)
+    output_prefix = os.environ.get("OUTPUT_PREFIX", build_output_prefix(job))
     report_dir = workspace / "reports" / job["report_type"]
     report_config = load_report_config(report_dir)
 
@@ -191,12 +236,14 @@ def main() -> int:
     provisional_manifest = {
         "job_id": job["job_id"],
         "report_type": job["report_type"],
+        "type_name": job["type_name"],
+        "purpose": job["purpose"],
         "artifacts": [
             {
                 "kind": path.suffix.lstrip("."),
                 "label": path.stem.replace("_", " ").title(),
                 "local_path": str(path.resolve()),
-                "s3_key": f"outputs/{job['job_id']}/artifacts/{path.name}",
+                "s3_key": f"{output_prefix}/artifacts/{path.name}",
             }
             for path in sorted(artifact_dir.iterdir())
         ],
@@ -207,18 +254,33 @@ def main() -> int:
     if not output_root.is_absolute():
         output_root = runtime_root / output_root
 
-    artifacts, rendered_outputs = upload_local_artifacts(job["job_id"], artifact_dir, rendered_dir, output_root)
+    artifacts, rendered_outputs = upload_local_artifacts(output_prefix, artifact_dir, rendered_dir, output_root)
     manifest = build_manifest(job, artifacts, rendered_outputs)
-    manifest_path = output_root / job["job_id"] / "manifest.json"
+    manifest_path = output_root / output_prefix_to_local_path(output_prefix) / "manifest.json"
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
     output_bucket = os.environ.get("OUTPUT_BUCKET")
-    output_prefix = os.environ.get("OUTPUT_PREFIX", f"outputs/{job['job_id']}")
+    presigned_url_expires_in = int(os.environ.get("PRESIGNED_URL_EXPIRES_IN", "86400"))
+    pptx_s3_key: str | None = None
+    pptx_presigned_url: str | None = None
+    pptx_presigned_url_expires_at: str | None = None
     if output_bucket:
         upload_outputs_to_s3(output_bucket, output_prefix, artifacts, rendered_outputs, manifest_path)
+        pptx_s3_key, pptx_presigned_url = build_presigned_url(output_bucket, rendered_outputs, presigned_url_expires_in)
+        if pptx_presigned_url:
+            pptx_presigned_url_expires_at = (
+                datetime.now(timezone.utc) + timedelta(seconds=presigned_url_expires_in)
+            ).isoformat()
 
-    persist_job_state(os.environ.get("JOB_KEY", job_reference), f"{output_prefix}/manifest.json", rendered_outputs)
+    persist_job_state(
+        os.environ.get("JOB_KEY", job_reference),
+        f"{output_prefix}/manifest.json",
+        rendered_outputs,
+        pptx_s3_key,
+        pptx_presigned_url,
+        pptx_presigned_url_expires_at,
+    )
 
     print(json.dumps({"manifest": str(manifest_path), "report_type": job["report_type"]}))
     return 0

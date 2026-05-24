@@ -13,5 +13,4 @@ export function resolveConfig(inputStage?: string): AppConfig {
   return stage === "prod" ? prodConfig : stagingConfig;
 }
 
-export type { AppConfig, Stage } from "./types";
-
+export type { AppConfig, Stage, TaskSizeProfile, TaskSizeProfileName } from "./types";
