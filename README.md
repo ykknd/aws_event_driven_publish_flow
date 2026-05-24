@@ -11,6 +11,57 @@ AWS 上でイベントドリブンな解析パイプラインを構築するた�
 - `jobs/`: ジョブ定義サンプルと仕様メモ
 - `docs/`: アーキテクチャと運用メモ
 
+## シーケンス図
+
+```mermaid
+sequenceDiagram
+    participant U as "利用者/上流処理"
+    participant S3 as "S3 jobs/"
+    participant EB as "EventBridge"
+    participant SFN as "Step Functions"
+    participant ECS as "ECS Fargate"
+    participant ATH as "Athena"
+    participant DDB as "DynamoDB"
+    participant OUT as "S3 outputs/"
+    participant SES as "SES"
+
+    U->>S3: job TOML を配置
+    S3->>EB: Object Created
+    EB->>SFN: ワークフロー開始
+    SFN->>ECS: check_readiness.py 実行
+    ECS->>S3: TOML 読み込み
+    ECS->>ATH: readiness_query 実行
+    ATH-->>ECS: 対象一覧返却
+    ECS->>DDB: readiness 状態と通知情報を保存
+    ECS-->>SFN: 実行終了
+    SFN->>DDB: readiness 状態取得
+
+    alt 入力不足
+        SFN->>SFN: 3時間 Wait
+        SFN->>ECS: check_readiness.py 再実行
+    else 入力充足
+        SFN->>ECS: run_analysis.py 実行
+        ECS->>S3: TOML 読み込み
+        ECS->>ECS: process.ipynb 実行
+        ECS->>OUT: artifacts / manifest / pptx 保存
+        ECS->>OUT: presigned URL 生成対象を保存
+        ECS->>DDB: presigned URL と出力情報を更新
+        ECS-->>SFN: 実行終了
+        SFN->>DDB: 通知情報を再取得
+        SFN->>SES: 成功メール送信
+    end
+
+    opt 最大再試行超過
+        SFN->>DDB: 通知情報を取得
+        SFN->>SES: give up メール送信
+    end
+
+    opt 実行失敗
+        SFN->>DDB: 通知情報を取得
+        SFN->>SES: failure メール送信
+    end
+```
+
 ## クイックスタート
 
 ### Infra
