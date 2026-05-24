@@ -1,0 +1,913 @@
+{
+ "Resources": {
+  "PipelineCluster63B468F9": {
+   "Type": "AWS::ECS::Cluster",
+   "Properties": {
+    "ClusterName": "publish-flow-staging-cluster",
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "staging"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/PipelineCluster/Resource"
+   }
+  },
+  "TaskSecurityGroup2D2EA438": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for publish-flow-staging ECS tasks",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "staging"
+     }
+    ],
+    "VpcId": "vpc-12345678"
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/TaskSecurityGroup/Resource"
+   }
+  },
+  "PublisherRoleFDE2F285": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Description": "Shared ECS task and execution role for publish_flow",
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+       ]
+      ]
+     }
+    ],
+    "RoleName": "publish-flow-staging-publisher",
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "staging"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/PublisherRole/Resource"
+   }
+  },
+  "PublisherRoleDefaultPolicy04D6B219": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "EngineLogGroup893F148F",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "s3:GetObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:DeleteObject*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputFnGetAttArtifactsBucket2AAC5544ArnD57FAE19"
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputFnGetAttArtifactsBucket2AAC5544ArnD57FAE19"
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputFnGetAttJobStateTable8E120B77Arn125B2001"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputFnGetAttJobStateTable8E120B77Arn125B2001"
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "PublisherRoleDefaultPolicy04D6B219",
+    "Roles": [
+     {
+      "Ref": "PublisherRoleFDE2F285"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/PublisherRole/DefaultPolicy/Resource"
+   }
+  },
+  "EngineLogGroup893F148F": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/aws/ecs/publish-flow-staging-engine",
+    "RetentionInDays": 7,
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "staging"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/EngineLogGroup/Resource"
+   }
+  },
+  "ReadinessTaskDefinitionD78CA291": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "PYTHONPATH",
+        "Value": "/app"
+       }
+      ],
+      "Essential": true,
+      "Image": "public.ecr.aws/docker/library/python:3.11-slim",
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "EngineLogGroup893F148F"
+        },
+        "awslogs-stream-prefix": "engine",
+        "awslogs-region": {
+         "Ref": "AWS::Region"
+        }
+       }
+      },
+      "MemoryReservation": 512,
+      "Name": "publish-flow-staging-engine"
+     }
+    ],
+    "Cpu": "512",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    },
+    "Family": "publish-flow-staging-engine-readiness",
+    "Memory": "1024",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "staging"
+     }
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/ReadinessTaskDefinition/Resource"
+   }
+  },
+  "SmallAnalysisTaskDefinition6467A1D3": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "PYTHONPATH",
+        "Value": "/app"
+       }
+      ],
+      "Essential": true,
+      "Image": "public.ecr.aws/docker/library/python:3.11-slim",
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "EngineLogGroup893F148F"
+        },
+        "awslogs-stream-prefix": "engine",
+        "awslogs-region": {
+         "Ref": "AWS::Region"
+        }
+       }
+      },
+      "MemoryReservation": 512,
+      "Name": "publish-flow-staging-engine"
+     }
+    ],
+    "Cpu": "512",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    },
+    "Family": "publish-flow-staging-engine-small",
+    "Memory": "1024",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "staging"
+     }
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/SmallAnalysisTaskDefinition/Resource"
+   }
+  },
+  "MediumAnalysisTaskDefinitionAE9FCE5E": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "PYTHONPATH",
+        "Value": "/app"
+       }
+      ],
+      "Essential": true,
+      "Image": "public.ecr.aws/docker/library/python:3.11-slim",
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "EngineLogGroup893F148F"
+        },
+        "awslogs-stream-prefix": "engine",
+        "awslogs-region": {
+         "Ref": "AWS::Region"
+        }
+       }
+      },
+      "MemoryReservation": 512,
+      "Name": "publish-flow-staging-engine"
+     }
+    ],
+    "Cpu": "1024",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    },
+    "Family": "publish-flow-staging-engine-medium",
+    "Memory": "2048",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "staging"
+     }
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/MediumAnalysisTaskDefinition/Resource"
+   }
+  },
+  "LargeAnalysisTaskDefinitionFD293BD2": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "PYTHONPATH",
+        "Value": "/app"
+       }
+      ],
+      "Essential": true,
+      "Image": "public.ecr.aws/docker/library/python:3.11-slim",
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "EngineLogGroup893F148F"
+        },
+        "awslogs-stream-prefix": "engine",
+        "awslogs-region": {
+         "Ref": "AWS::Region"
+        }
+       }
+      },
+      "MemoryReservation": 512,
+      "Name": "publish-flow-staging-engine"
+     }
+    ],
+    "Cpu": "2048",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    },
+    "Family": "publish-flow-staging-engine-large",
+    "Memory": "4096",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "staging"
+     }
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/LargeAnalysisTaskDefinition/Resource"
+   }
+  },
+  "MaxAnalysisTaskDefinition0985CED5": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "PYTHONPATH",
+        "Value": "/app"
+       }
+      ],
+      "Essential": true,
+      "Image": "public.ecr.aws/docker/library/python:3.11-slim",
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "EngineLogGroup893F148F"
+        },
+        "awslogs-stream-prefix": "engine",
+        "awslogs-region": {
+         "Ref": "AWS::Region"
+        }
+       }
+      },
+      "MemoryReservation": 512,
+      "Name": "publish-flow-staging-engine"
+     }
+    ],
+    "Cpu": "4096",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    },
+    "Family": "publish-flow-staging-engine-max",
+    "Memory": "8192",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "Tags": [
+     {
+      "Key": "Application",
+      "Value": "publish_flow"
+     },
+     {
+      "Key": "Stage",
+      "Value": "staging"
+     }
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "PublisherRoleFDE2F285",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/MaxAnalysisTaskDefinition/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/12MwQrCMAyGn8V7F3U4fABFLx5kepda44jrGmlaZZS+u0xR0dP/5Uvyl1BWc5iM9F0Kc2oLS0dIu6BNq2oUjt6g0nc5JDQCaWGjBPRqcXZvXGnf6IB7Le0Sz+QoELvh4N+wC5oc+q/LCk0JaYcmegr92nO8Dp8/IivSHaSaLQ67Z27ZkumH8UVZWW4E0oabT8mbc87K8QnhIuNbOYNpBZPRRYgKH12gDqF+5QNIv34ZCgEAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "PublishFlowComputeStack-staging/CDKMetadata/Default"
+   },
+   "Condition": "CDKMetadataAvailable"
+  }
+ },
+ "Conditions": {
+  "CDKMetadataAvailable": {
+   "Fn::Or": [
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "af-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-northeast-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-south-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-3"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ap-southeast-4"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "ca-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "cn-northwest-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-central-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-north-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-south-2"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Or": [
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "eu-west-3"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "il-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-central-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "me-south-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "sa-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-1"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-east-2"
+       ]
+      },
+      {
+       "Fn::Equals": [
+        {
+         "Ref": "AWS::Region"
+        },
+        "us-west-1"
+       ]
+      }
+     ]
+    },
+    {
+     "Fn::Equals": [
+      {
+       "Ref": "AWS::Region"
+      },
+      "us-west-2"
+     ]
+    }
+   ]
+  }
+ },
+ "Outputs": {
+  "ExportsOutputRefReadinessTaskDefinitionD78CA2913711276C": {
+   "Value": {
+    "Ref": "ReadinessTaskDefinitionD78CA291"
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack-staging:ExportsOutputRefReadinessTaskDefinitionD78CA2913711276C"
+   }
+  },
+  "ExportsOutputFnGetAttPublisherRoleFDE2F285ArnA7C18B09": {
+   "Value": {
+    "Fn::GetAtt": [
+     "PublisherRoleFDE2F285",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack-staging:ExportsOutputFnGetAttPublisherRoleFDE2F285ArnA7C18B09"
+   }
+  },
+  "ExportsOutputRefMaxAnalysisTaskDefinition0985CED55B70D03F": {
+   "Value": {
+    "Ref": "MaxAnalysisTaskDefinition0985CED5"
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack-staging:ExportsOutputRefMaxAnalysisTaskDefinition0985CED55B70D03F"
+   }
+  },
+  "ExportsOutputRefSmallAnalysisTaskDefinition6467A1D3181DF7A1": {
+   "Value": {
+    "Ref": "SmallAnalysisTaskDefinition6467A1D3"
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack-staging:ExportsOutputRefSmallAnalysisTaskDefinition6467A1D3181DF7A1"
+   }
+  },
+  "ExportsOutputRefMediumAnalysisTaskDefinitionAE9FCE5EC6CE2934": {
+   "Value": {
+    "Ref": "MediumAnalysisTaskDefinitionAE9FCE5E"
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack-staging:ExportsOutputRefMediumAnalysisTaskDefinitionAE9FCE5EC6CE2934"
+   }
+  },
+  "ExportsOutputRefLargeAnalysisTaskDefinitionFD293BD26679E312": {
+   "Value": {
+    "Ref": "LargeAnalysisTaskDefinitionFD293BD2"
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack-staging:ExportsOutputRefLargeAnalysisTaskDefinitionFD293BD26679E312"
+   }
+  },
+  "ExportsOutputFnGetAttPipelineCluster63B468F9Arn53941560": {
+   "Value": {
+    "Fn::GetAtt": [
+     "PipelineCluster63B468F9",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack-staging:ExportsOutputFnGetAttPipelineCluster63B468F9Arn53941560"
+   }
+  },
+  "ExportsOutputFnGetAttTaskSecurityGroup2D2EA438GroupIdDC08A563": {
+   "Value": {
+    "Fn::GetAtt": [
+     "TaskSecurityGroup2D2EA438",
+     "GroupId"
+    ]
+   },
+   "Export": {
+    "Name": "PublishFlowComputeStack-staging:ExportsOutputFnGetAttTaskSecurityGroup2D2EA438GroupIdDC08A563"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

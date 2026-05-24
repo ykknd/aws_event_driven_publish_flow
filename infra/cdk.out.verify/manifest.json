@@ -1,28 +1,32 @@
 {
   "version": "53.0.0",
   "artifacts": {
-    "PublishFlowStorageStack.assets": {
+    "PublishFlowStorageStack-staging.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "PublishFlowStorageStack.assets.json",
+        "file": "PublishFlowStorageStack-staging.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "PublishFlowStorageStack": {
+    "PublishFlowStorageStack-staging": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "PublishFlowStorageStack.template.json",
+        "templateFile": "PublishFlowStorageStack-staging.template.json",
         "terminationProtection": false,
+        "tags": {
+          "Application": "publish_flow",
+          "Stage": "staging"
+        },
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/3a09b855feb65a459a0edcf90d654054623e12a5438d73d6cf6a93341c8a804c.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/17f30b1cb45e239c5460dd7f0f2a023733ea4a993cb4697f119121c0eb1dfbda.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "PublishFlowStorageStack.assets"
+          "PublishFlowStorageStack-staging.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -31,33 +35,37 @@
         }
       },
       "dependencies": [
-        "PublishFlowStorageStack.assets"
+        "PublishFlowStorageStack-staging.assets"
       ],
-      "additionalMetadataFile": "PublishFlowStorageStack.metadata.json",
-      "displayName": "PublishFlowStorageStack"
+      "additionalMetadataFile": "PublishFlowStorageStack-staging.metadata.json",
+      "displayName": "PublishFlowStorageStack-staging"
     },
-    "PublishFlowNotificationStack.assets": {
+    "PublishFlowComputeStack-staging.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "PublishFlowNotificationStack.assets.json",
+        "file": "PublishFlowComputeStack-staging.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "PublishFlowNotificationStack": {
+    "PublishFlowComputeStack-staging": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "PublishFlowNotificationStack.template.json",
+        "templateFile": "PublishFlowComputeStack-staging.template.json",
         "terminationProtection": false,
+        "tags": {
+          "Application": "publish_flow",
+          "Stage": "staging"
+        },
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/47f4af74970a7ed5656ae5faf3e69e174bb1dee52659683b6e639102d5b822ff.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/861977370e3a51cb5944b2414941c6ad690130f12a1a7b362ac8fcfd30d92fcb.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "PublishFlowNotificationStack.assets"
+          "PublishFlowComputeStack-staging.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -66,33 +74,38 @@
         }
       },
       "dependencies": [
-        "PublishFlowNotificationStack.assets"
+        "PublishFlowStorageStack-staging",
+        "PublishFlowComputeStack-staging.assets"
       ],
-      "additionalMetadataFile": "PublishFlowNotificationStack.metadata.json",
-      "displayName": "PublishFlowNotificationStack"
+      "additionalMetadataFile": "PublishFlowComputeStack-staging.metadata.json",
+      "displayName": "PublishFlowComputeStack-staging"
     },
-    "PublishFlowComputeStack.assets": {
+    "PublishFlowOrchestrationStack-staging.assets": {
       "type": "cdk:asset-manifest",
       "properties": {
-        "file": "PublishFlowComputeStack.assets.json",
+        "file": "PublishFlowOrchestrationStack-staging.assets.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
       }
     },
-    "PublishFlowComputeStack": {
+    "PublishFlowOrchestrationStack-staging": {
       "type": "aws:cloudformation:stack",
       "environment": "aws://unknown-account/unknown-region",
       "properties": {
-        "templateFile": "PublishFlowComputeStack.template.json",
+        "templateFile": "PublishFlowOrchestrationStack-staging.template.json",
         "terminationProtection": false,
+        "tags": {
+          "Application": "publish_flow",
+          "Stage": "staging"
+        },
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/0db1834b1de2814e42e97e7496faa990b013c82b2f8ea73a06b972fb0939b2a5.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/e85d23e4e70ff6cf8986bffa5dbb513a6813d4f8e6eac101db9cdd60df925ac0.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
-          "PublishFlowComputeStack.assets"
+          "PublishFlowOrchestrationStack-staging.assets"
         ],
         "lookupRole": {
           "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
@@ -101,49 +114,12 @@
         }
       },
       "dependencies": [
-        "PublishFlowStorageStack",
-        "PublishFlowComputeStack.assets"
+        "PublishFlowComputeStack-staging",
+        "PublishFlowStorageStack-staging",
+        "PublishFlowOrchestrationStack-staging.assets"
       ],
-      "additionalMetadataFile": "PublishFlowComputeStack.metadata.json",
-      "displayName": "PublishFlowComputeStack"
-    },
-    "PublishFlowOrchestrationStack.assets": {
-      "type": "cdk:asset-manifest",
-      "properties": {
-        "file": "PublishFlowOrchestrationStack.assets.json",
-        "requiresBootstrapStackVersion": 6,
-        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
-      }
-    },
-    "PublishFlowOrchestrationStack": {
-      "type": "aws:cloudformation:stack",
-      "environment": "aws://unknown-account/unknown-region",
-      "properties": {
-        "templateFile": "PublishFlowOrchestrationStack.template.json",
-        "terminationProtection": false,
-        "validateOnSynth": false,
-        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
-        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/84a6553f352e47e6a7007983c3b2237f58a497d0cd1518812c0c41cd02dc05cd.json",
-        "requiresBootstrapStackVersion": 6,
-        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
-        "additionalDependencies": [
-          "PublishFlowOrchestrationStack.assets"
-        ],
-        "lookupRole": {
-          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
-          "requiresBootstrapStackVersion": 8,
-          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
-        }
-      },
-      "dependencies": [
-        "PublishFlowComputeStack",
-        "PublishFlowStorageStack",
-        "PublishFlowNotificationStack",
-        "PublishFlowOrchestrationStack.assets"
-      ],
-      "additionalMetadataFile": "PublishFlowOrchestrationStack.metadata.json",
-      "displayName": "PublishFlowOrchestrationStack"
+      "additionalMetadataFile": "PublishFlowOrchestrationStack-staging.metadata.json",
+      "displayName": "PublishFlowOrchestrationStack-staging"
     },
     "Tree": {
       "type": "cdk:tree",

@@ -2,6 +2,14 @@ import * as cdk from "aws-cdk-lib";
 import * as logs from "aws-cdk-lib/aws-logs";
 
 export type Stage = "staging" | "prod";
+export type TaskSizeProfileName = "small" | "medium" | "large" | "max";
+
+export interface TaskSizeProfile {
+  name: TaskSizeProfileName;
+  maxTargets?: number;
+  cpu: number;
+  memoryLimitMiB: number;
+}
 
 export interface AppConfig {
   stage: Stage;
@@ -22,6 +30,7 @@ export interface AppConfig {
   privateSubnetIdsParameterName: string;
   s3VpcEndpointIdParameterName: string;
   allowedCidrsParameterName: string;
+  taskSizeProfiles: TaskSizeProfile[];
   waitHours: number;
   maxRetries: number;
   isProduction: boolean;

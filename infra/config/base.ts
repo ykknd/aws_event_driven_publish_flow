@@ -1,6 +1,13 @@
 import * as cdk from "aws-cdk-lib";
 import * as logs from "aws-cdk-lib/aws-logs";
-import { AppConfig, Stage } from "./types";
+import { AppConfig, Stage, TaskSizeProfile } from "./types";
+
+const defaultTaskSizeProfiles: TaskSizeProfile[] = [
+  { name: "small", maxTargets: 5, cpu: 4096, memoryLimitMiB: 30720 },
+  { name: "medium", maxTargets: 20, cpu: 8192, memoryLimitMiB: 61440 },
+  { name: "large", maxTargets: 50, cpu: 16384, memoryLimitMiB: 81920 },
+  { name: "max", cpu: 16384, memoryLimitMiB: 106496 },
+];
 
 export function createBaseConfig(stage: Stage): AppConfig {
   const namePrefix = `publish-flow-${stage}`;
@@ -26,6 +33,7 @@ export function createBaseConfig(stage: Stage): AppConfig {
     privateSubnetIdsParameterName: `${networkParamPrefix}/private-subnet-ids`,
     s3VpcEndpointIdParameterName: `${networkParamPrefix}/s3-vpce-id`,
     allowedCidrsParameterName: `${networkParamPrefix}/allowed-cidrs`,
+    taskSizeProfiles: defaultTaskSizeProfiles,
     waitHours: 3,
     maxRetries: 80,
     isProduction: false,

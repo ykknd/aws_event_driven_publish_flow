@@ -170,3 +170,9 @@ uv run python app/run_analysis.py --job ..\jobs\examples\inventory_report.toml
 - S3 の閲覧制限は `SourceVpce` と社内 CIDR の両方を使って制御します。
 - 通知メールは SES を使い、送信元は Parameter Store または `senderEmail` context で指定します。
 - 通知先と件名は、S3 に置かれる実ジョブ TOML の `[notification]` から読み取ります。
+- `analysis_targets` の件数に応じて、解析用 Fargate タスクは 4 段階で自動的に切り替わります。
+  - `small`: 1-5 件, `4 vCPU / 30 GiB`
+  - `medium`: 6-20 件, `8 vCPU / 60 GiB`
+  - `large`: 21-50 件, `16 vCPU / 80 GiB`
+  - `max`: 51 件以上, `16 vCPU / 104 GiB`
+- この切り替えは `check_readiness.py` が TOML を読んだ時点で判定し、Step Functions が該当サイズの task definition を選びます。

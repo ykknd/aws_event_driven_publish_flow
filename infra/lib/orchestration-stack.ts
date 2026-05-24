@@ -16,6 +16,7 @@ export class OrchestrationStack extends cdk.Stack {
     const senderEmail =
       this.node.tryGetContext("senderEmail") ??
       ssm.StringParameter.valueFromLookup(this, props.config.senderEmailParameterName);
+    const taskSizeProfilesJson = JSON.stringify(props.config.taskSizeProfiles);
 
     const loadContext = new sfn.Pass(this, "LoadContext", {
       parameters: {
@@ -28,7 +29,7 @@ export class OrchestrationStack extends cdk.Stack {
     const runReadiness = new tasks.EcsRunTask(this, "RunReadinessCheck", {
       integrationPattern: sfn.IntegrationPattern.RUN_JOB,
       cluster: props.cluster,
-      taskDefinition: props.taskDefinition,
+      taskDefinition: props.readinessTaskDefinition,
       assignPublicIp: false,
       launchTarget: new tasks.EcsFargateLaunchTarget(),
       securityGroups: [props.taskSecurityGroup],
@@ -37,7 +38,7 @@ export class OrchestrationStack extends cdk.Stack {
       },
       containerOverrides: [
         {
-          containerDefinition: props.taskDefinition.defaultContainer!,
+          containerDefinition: props.readinessTaskDefinition.defaultContainer!,
           command: ["python", "/app/engine/app/check_readiness.py"],
           environment: [
             { name: "JOB_BUCKET", value: sfn.JsonPath.stringAt("$.bucket") },
@@ -45,6 +46,7 @@ export class OrchestrationStack extends cdk.Stack {
             { name: "RETRY_COUNT", value: sfn.JsonPath.stringAt("$.retry_count") },
             { name: "READINESS_OUTPUT_PATH", value: "/tmp/readiness.json" },
             { name: "JOB_STATE_TABLE", value: props.jobStateTable.tableName },
+            { name: "TASK_SIZE_PROFILES_JSON", value: taskSizeProfilesJson },
           ],
         },
       ],
@@ -57,14 +59,6 @@ export class OrchestrationStack extends cdk.Stack {
         job_key: tasks.DynamoAttributeValue.fromString(sfn.JsonPath.stringAt("$.job_key")),
       },
       resultPath: "$.status",
-    });
-
-    const fetchSuccessNotificationStatus = new tasks.DynamoGetItem(this, "FetchSuccessNotificationStatus", {
-      table: props.jobStateTable,
-      key: {
-        job_key: tasks.DynamoAttributeValue.fromString(sfn.JsonPath.stringAt("$.job_key")),
-      },
-      resultPath: "$.notification_status",
     });
 
     const fetchGiveUpNotificationStatus = new tasks.DynamoGetItem(this, "FetchGiveUpNotificationStatus", {
@@ -83,39 +77,38 @@ export class OrchestrationStack extends cdk.Stack {
       resultPath: "$.notification_status",
     });
 
-    const fetchAnalysisFailureNotificationStatus = new tasks.DynamoGetItem(this, "FetchAnalysisFailureNotificationStatus", {
-      table: props.jobStateTable,
-      key: {
-        job_key: tasks.DynamoAttributeValue.fromString(sfn.JsonPath.stringAt("$.job_key")),
-      },
-      resultPath: "$.notification_status",
-    });
-
-    const runAnalysis = new tasks.EcsRunTask(this, "RunAnalysis", {
-      integrationPattern: sfn.IntegrationPattern.RUN_JOB,
-      cluster: props.cluster,
-      taskDefinition: props.taskDefinition,
-      assignPublicIp: false,
-      launchTarget: new tasks.EcsFargateLaunchTarget(),
-      securityGroups: [props.taskSecurityGroup],
-      subnets: {
-        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-      },
-      containerOverrides: [
-        {
-          containerDefinition: props.taskDefinition.defaultContainer!,
-          command: ["python", "/app/engine/app/run_analysis.py"],
-          environment: [
-            { name: "JOB_BUCKET", value: sfn.JsonPath.stringAt("$.bucket") },
-            { name: "JOB_KEY", value: sfn.JsonPath.stringAt("$.job_key") },
-            { name: "OUTPUT_BUCKET", value: props.artifactsBucket.bucketName },
-            { name: "OUTPUT_PREFIX", value: sfn.JsonPath.format("outputs/{}", sfn.JsonPath.stringAt("$.status.Item.job_id.S")) },
-            { name: "JOB_STATE_TABLE", value: props.jobStateTable.tableName },
-          ],
+    const createRunAnalysisTask = (profileName: keyof typeof props.analysisTaskDefinitions, idSuffix: string) =>
+      new tasks.EcsRunTask(this, `RunAnalysis${idSuffix}`, {
+        integrationPattern: sfn.IntegrationPattern.RUN_JOB,
+        cluster: props.cluster,
+        taskDefinition: props.analysisTaskDefinitions[profileName],
+        assignPublicIp: false,
+        launchTarget: new tasks.EcsFargateLaunchTarget(),
+        securityGroups: [props.taskSecurityGroup],
+        subnets: {
+          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
         },
-      ],
-      resultPath: sfn.JsonPath.DISCARD,
-    });
+        containerOverrides: [
+          {
+            containerDefinition: props.analysisTaskDefinitions[profileName].defaultContainer!,
+            command: ["python", "/app/engine/app/run_analysis.py"],
+            environment: [
+              { name: "JOB_BUCKET", value: sfn.JsonPath.stringAt("$.bucket") },
+              { name: "JOB_KEY", value: sfn.JsonPath.stringAt("$.job_key") },
+              { name: "OUTPUT_BUCKET", value: props.artifactsBucket.bucketName },
+              { name: "OUTPUT_PREFIX", value: sfn.JsonPath.format("outputs/{}", sfn.JsonPath.stringAt("$.status.Item.job_id.S")) },
+              { name: "JOB_STATE_TABLE", value: props.jobStateTable.tableName },
+              { name: "TASK_SIZE_PROFILE", value: sfn.JsonPath.stringAt("$.status.Item.task_size_profile.S") },
+            ],
+          },
+        ],
+        resultPath: sfn.JsonPath.DISCARD,
+      });
+
+    const runSmallAnalysis = createRunAnalysisTask("small", "Small");
+    const runMediumAnalysis = createRunAnalysisTask("medium", "Medium");
+    const runLargeAnalysis = createRunAnalysisTask("large", "Large");
+    const runMaxAnalysis = createRunAnalysisTask("max", "Max");
 
     const waitThreeHours = new sfn.Wait(this, "Wait3Hours", {
       time: sfn.WaitTime.duration(cdk.Duration.hours(props.config.waitHours)),
@@ -228,6 +221,71 @@ export class OrchestrationStack extends cdk.Stack {
       resultPath: sfn.JsonPath.DISCARD,
     });
 
+    const createFetchNotificationStatusTask = (idSuffix: string) =>
+      new tasks.DynamoGetItem(this, `Fetch${idSuffix}NotificationStatus`, {
+        table: props.jobStateTable,
+        key: {
+          job_key: tasks.DynamoAttributeValue.fromString(sfn.JsonPath.stringAt("$.job_key")),
+        },
+        resultPath: "$.notification_status",
+      });
+
+    const createNotifyFailureTask = (idSuffix: string) =>
+      new tasks.CallAwsService(this, `NotifyFailure${idSuffix}`, {
+        service: "sesv2",
+        action: "sendEmail",
+        iamResources: ["*"],
+        parameters: {
+          FromEmailAddress: senderEmail,
+          Destination: {
+            ToAddresses: sfn.JsonPath.listAt("$.notification_status.Item.notification_to.SS"),
+          },
+          Content: {
+            Simple: {
+              Subject: {
+                Data: sfn.JsonPath.format(
+                  "[FAILURE] {}",
+                  sfn.JsonPath.stringAt("$.notification_status.Item.notification_subject.S"),
+                ),
+              },
+              Body: {
+                Text: {
+                  Data: sfn.JsonPath.format(
+                    "ジョブID: {}\\nレポート種別: {}\\nエラー: {}\\n詳細: {}",
+                    sfn.JsonPath.stringAt("$.notification_status.Item.job_id.S"),
+                    sfn.JsonPath.stringAt("$.notification_status.Item.report_type.S"),
+                    sfn.JsonPath.stringAt("$.error.Error"),
+                    sfn.JsonPath.stringAt("$.error.Cause"),
+                  ),
+                },
+              },
+            },
+          },
+        },
+        resultPath: sfn.JsonPath.DISCARD,
+      });
+
+    const createSuccessNotificationChain = (idSuffix: string, analysisTask: tasks.EcsRunTask) =>
+      analysisTask.next(createFetchNotificationStatusTask(`Success${idSuffix}`)).next(notifySuccess);
+
+    const createFailureNotificationChain = (idSuffix: string) =>
+      createFetchNotificationStatusTask(`AnalysisFailure${idSuffix}`).next(createNotifyFailureTask(idSuffix));
+
+    const selectAnalysisTaskSize = new sfn.Choice(this, "SelectAnalysisTaskSize")
+      .when(
+        sfn.Condition.stringEquals("$.status.Item.task_size_profile.S", "small"),
+        createSuccessNotificationChain("Small", runSmallAnalysis),
+      )
+      .when(
+        sfn.Condition.stringEquals("$.status.Item.task_size_profile.S", "medium"),
+        createSuccessNotificationChain("Medium", runMediumAnalysis),
+      )
+      .when(
+        sfn.Condition.stringEquals("$.status.Item.task_size_profile.S", "large"),
+        createSuccessNotificationChain("Large", runLargeAnalysis),
+      )
+      .otherwise(createSuccessNotificationChain("Max", runMaxAnalysis));
+
     const retryLimitReached = new sfn.Choice(this, "RetryLimitReached")
       .when(
         sfn.Condition.numberGreaterThanEquals("$.retry_count", props.config.maxRetries),
@@ -238,7 +296,7 @@ export class OrchestrationStack extends cdk.Stack {
     const readinessBranch = new sfn.Choice(this, "InputsReady")
       .when(
         sfn.Condition.booleanEquals("$.status.Item.ready.BOOL", true),
-        runAnalysis.next(fetchSuccessNotificationStatus).next(notifySuccess),
+        selectAnalysisTaskSize,
       )
       .otherwise(waitThreeHours.next(incrementRetry).next(retryLimitReached));
 
@@ -280,6 +338,9 @@ export class OrchestrationStack extends cdk.Stack {
     rule.addTarget(new targets.SfnStateMachine(stateMachine));
 
     runReadiness.addCatch(fetchReadinessFailureNotificationStatus.next(notifyFailure), { resultPath: "$.error" });
-    runAnalysis.addCatch(fetchAnalysisFailureNotificationStatus.next(notifyFailure), { resultPath: "$.error" });
+    runSmallAnalysis.addCatch(createFailureNotificationChain("Small"), { resultPath: "$.error" });
+    runMediumAnalysis.addCatch(createFailureNotificationChain("Medium"), { resultPath: "$.error" });
+    runLargeAnalysis.addCatch(createFailureNotificationChain("Large"), { resultPath: "$.error" });
+    runMaxAnalysis.addCatch(createFailureNotificationChain("Max"), { resultPath: "$.error" });
   }
 }

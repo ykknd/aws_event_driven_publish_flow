@@ -29,7 +29,8 @@ new OrchestrationStack(app, `PublishFlowOrchestrationStack-${config.stage}`, {
   artifactsBucket: storage.artifactsBucket,
   jobStateTable: storage.jobStateTable,
   cluster: compute.cluster,
-  taskDefinition: compute.taskDefinition,
+  readinessTaskDefinition: compute.readinessTaskDefinition,
+  analysisTaskDefinitions: compute.analysisTaskDefinitions,
   containerName: compute.containerName,
   taskSecurityGroup: compute.taskSecurityGroup,
 });

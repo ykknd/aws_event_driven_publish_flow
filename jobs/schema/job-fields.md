@@ -8,3 +8,4 @@
 - `parameters`: レポート設定用の自由形式テーブル
 - `notification.to`: SES 通知の宛先メールアドレス一覧
 - `notification.subject`: SES 通知の件名
+- `analysis_targets` の件数は、解析用 Fargate タスクのサイズ自動選択にも使われる

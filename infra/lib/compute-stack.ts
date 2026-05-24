@@ -8,10 +8,12 @@ import * as ssm from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 import * as path from "path";
 import { ComputeStackProps } from "./types";
+import { TaskSizeProfileName } from "../config";
 
 export class ComputeStack extends cdk.Stack {
   public readonly cluster: ecs.Cluster;
-  public readonly taskDefinition: ecs.FargateTaskDefinition;
+  public readonly readinessTaskDefinition: ecs.FargateTaskDefinition;
+  public readonly analysisTaskDefinitions: Record<TaskSizeProfileName, ecs.FargateTaskDefinition>;
   public readonly containerName: string;
   public readonly taskSecurityGroup: ec2.SecurityGroup;
 
@@ -62,14 +64,6 @@ export class ComputeStack extends cdk.Stack {
       publisherRole.addToPrincipalPolicy(statement);
     });
 
-    this.taskDefinition = new ecs.FargateTaskDefinition(this, "PipelineTaskDefinition", {
-      memoryLimitMiB: 2048,
-      cpu: 1024,
-      family: props.config.taskDefinitionFamily,
-      taskRole: publisherRole,
-      executionRole: publisherRole,
-    });
-
     const useDockerAsset = this.node.tryGetContext("useDockerAsset") === "true";
     const image = useDockerAsset
       ? ecs.ContainerImage.fromAsset(path.resolve(__dirname, "../.."), {
@@ -86,17 +80,54 @@ export class ComputeStack extends cdk.Stack {
 
     this.containerName = props.config.containerName;
 
-    this.taskDefinition.addContainer(this.containerName, {
-      image,
-      logging: ecs.LogDrivers.awsLogs({
-        logGroup,
-        streamPrefix: "engine",
-      }),
-      memoryReservationMiB: 512,
-      environment: {
-        PYTHONPATH: "/app",
+    const createTaskDefinition = (
+      id: string,
+      family: string,
+      cpu: number,
+      memoryLimitMiB: number,
+    ): ecs.FargateTaskDefinition => {
+      const taskDefinition = new ecs.FargateTaskDefinition(this, id, {
+        memoryLimitMiB,
+        cpu,
+        family,
+        taskRole: publisherRole,
+        executionRole: publisherRole,
+      });
+
+      taskDefinition.addContainer(this.containerName, {
+        image,
+        logging: ecs.LogDrivers.awsLogs({
+          logGroup,
+          streamPrefix: "engine",
+        }),
+        memoryReservationMiB: 512,
+        environment: {
+          PYTHONPATH: "/app",
+        },
+      });
+
+      return taskDefinition;
+    };
+
+    this.readinessTaskDefinition = createTaskDefinition(
+      "ReadinessTaskDefinition",
+      `${props.config.taskDefinitionFamily}-readiness`,
+      512,
+      1024,
+    );
+
+    this.analysisTaskDefinitions = props.config.taskSizeProfiles.reduce(
+      (definitions, profile) => {
+        definitions[profile.name] = createTaskDefinition(
+          `${profile.name[0].toUpperCase()}${profile.name.slice(1)}AnalysisTaskDefinition`,
+          `${props.config.taskDefinitionFamily}-${profile.name}`,
+          profile.cpu,
+          profile.memoryLimitMiB,
+        );
+        return definitions;
       },
-    });
+      {} as Record<TaskSizeProfileName, ecs.FargateTaskDefinition>,
+    );
 
     props.artifactsBucket.grantReadWrite(publisherRole);
     props.jobStateTable.grantReadWriteData(publisherRole);

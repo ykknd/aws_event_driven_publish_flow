@@ -1,0 +1,421 @@
+{
+  "/PublishFlowComputeStack-staging": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals, ts-node, ts-node, ts-node..."
+      ]
+    },
+    {
+      "type": "aws:cdk:stack-tags",
+      "data": [
+        {
+          "key": "Application",
+          "value": "publish_flow"
+        },
+        {
+          "key": "Stage",
+          "value": "staging"
+        }
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/ExistingVpc/PrivateSubnet1": [
+    {
+      "type": "aws:cdk:warning",
+      "data": "No routeTableId was provided to the subnet 'subnet-11111111'. Attempting to read its .routeTable.routeTableId will return null/undefined. (More info: https://github.com/aws/aws-cdk/pull/3171) [ack: @aws-cdk/aws-ec2:noSubnetRouteTableId]",
+      "trace": [
+        "Annotations.addMessage (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:2399)",
+        "Annotations.addWarningV2 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:1087)",
+        "new ImportedSubnet2 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:50061)",
+        "new ImportedSubnet2 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\core\\lib\\prop-injectable.js:1:855)",
+        "Subnet2.fromSubnetAttributes (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:32075)",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\util.js:1:2658",
+        "Array.map (<anonymous>)",
+        "ImportSubnetGroup.import (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\util.js:1:2576)",
+        "new ImportedVpc2 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:44719)",
+        "new ImportedVpc2 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\core\\lib\\prop-injectable.js:1:855)",
+        "Vpc2.fromVpcAttributes (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:12862)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:34:25)",
+        "Object.<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "Module._compile (node:internal/modules/cjs/loader:1830:14)",
+        "Module.m._compile (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\index.ts:1618:23)",
+        "node:internal/modules/cjs/loader:1961:10",
+        "Object.require.extensions.<computed> [as .ts] (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\index.ts:1621:12)",
+        "Module.load (node:internal/modules/cjs/loader:1553:32)",
+        "Module._load (node:internal/modules/cjs/loader:1355:12)",
+        "wrapModuleLoad (node:internal/modules/cjs/loader:255:19)",
+        "Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)",
+        "phase4 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\bin.ts:649:14)",
+        "bootstrap (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\bin.ts:95:10)",
+        "main (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\bin.ts:55:10)",
+        "Object.<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\bin.ts:800:3)",
+        "Module._compile (node:internal/modules/cjs/loader:1830:14)",
+        "Object.<anonymous> (node:internal/modules/cjs/loader:1961:10)",
+        "Module.load (node:internal/modules/cjs/loader:1553:32)",
+        "Module._load (node:internal/modules/cjs/loader:1355:12)",
+        "wrapModuleLoad (node:internal/modules/cjs/loader:255:19)",
+        "Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)",
+        "node:internal/main/run_main_module:33:47"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/ExistingVpc/PrivateSubnet2": [
+    {
+      "type": "aws:cdk:warning",
+      "data": "No routeTableId was provided to the subnet 'subnet-22222222'. Attempting to read its .routeTable.routeTableId will return null/undefined. (More info: https://github.com/aws/aws-cdk/pull/3171) [ack: @aws-cdk/aws-ec2:noSubnetRouteTableId]",
+      "trace": [
+        "Annotations.addMessage (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:2399)",
+        "Annotations.addWarningV2 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\core\\lib\\annotations.js:1:1087)",
+        "new ImportedSubnet2 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:50061)",
+        "new ImportedSubnet2 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\core\\lib\\prop-injectable.js:1:855)",
+        "Subnet2.fromSubnetAttributes (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:32075)",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\util.js:1:2658",
+        "Array.map (<anonymous>)",
+        "ImportSubnetGroup.import (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\util.js:1:2576)",
+        "new ImportedVpc2 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:44719)",
+        "new ImportedVpc2 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\core\\lib\\prop-injectable.js:1:855)",
+        "Vpc2.fromVpcAttributes (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\aws-cdk-lib\\aws-ec2\\lib\\vpc.js:1:12862)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:34:25)",
+        "Object.<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "Module._compile (node:internal/modules/cjs/loader:1830:14)",
+        "Module.m._compile (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\index.ts:1618:23)",
+        "node:internal/modules/cjs/loader:1961:10",
+        "Object.require.extensions.<computed> [as .ts] (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\index.ts:1621:12)",
+        "Module.load (node:internal/modules/cjs/loader:1553:32)",
+        "Module._load (node:internal/modules/cjs/loader:1355:12)",
+        "wrapModuleLoad (node:internal/modules/cjs/loader:255:19)",
+        "Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)",
+        "phase4 (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\bin.ts:649:14)",
+        "bootstrap (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\bin.ts:95:10)",
+        "main (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\bin.ts:55:10)",
+        "Object.<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\node_modules\\ts-node\\src\\bin.ts:800:3)",
+        "Module._compile (node:internal/modules/cjs/loader:1830:14)",
+        "Object.<anonymous> (node:internal/modules/cjs/loader:1961:10)",
+        "Module.load (node:internal/modules/cjs/loader:1553:32)",
+        "Module._load (node:internal/modules/cjs/loader:1355:12)",
+        "wrapModuleLoad (node:internal/modules/cjs/loader:255:19)",
+        "Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)",
+        "node:internal/main/run_main_module:33:47"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PipelineCluster/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PipelineCluster63B468F9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Cluster2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:40:20)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/TaskSecurityGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TaskSecurityGroup2D2EA438"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new SecurityGroup2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:45:30)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PublisherRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PublisherRoleFDE2F285"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Role2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:56:27)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/EngineLogGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "EngineLogGroup893F148F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new LogGroup2 in aws-cdk-lib...",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:75:22)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/ReadinessTaskDefinition/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ReadinessTaskDefinitionD78CA291"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new FargateTaskDefinition2 in aws-cdk-lib...",
+        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:89:30)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:112:36)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/SmallAnalysisTaskDefinition/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SmallAnalysisTaskDefinition6467A1D3"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new FargateTaskDefinition2 in aws-cdk-lib...",
+        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:89:30)",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121:3)",
+        "Array.reduce (:)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:119:66)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/MediumAnalysisTaskDefinition/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MediumAnalysisTaskDefinitionAE9FCE5E"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new FargateTaskDefinition2 in aws-cdk-lib...",
+        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:89:30)",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121:3)",
+        "Array.reduce (:)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:119:66)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/LargeAnalysisTaskDefinition/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "LargeAnalysisTaskDefinitionFD293BD2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new FargateTaskDefinition2 in aws-cdk-lib...",
+        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:89:30)",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121:3)",
+        "Array.reduce (:)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:119:66)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/MaxAnalysisTaskDefinition/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MaxAnalysisTaskDefinition0985CED5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new FargateTaskDefinition2 in aws-cdk-lib...",
+        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:89:30)",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121:3)",
+        "Array.reduce (:)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:119:66)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/CDKMetadata/Condition": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadataAvailable"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Ref\":\"ReadinessTaskDefinitionD78CA291\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefReadinessTaskDefinitionD78CA2913711276C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Fn::GetAtt\":[\"PublisherRoleFDE2F285\",\"Arn\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttPublisherRoleFDE2F285ArnA7C18B09"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Ref\":\"MaxAnalysisTaskDefinition0985CED5\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefMaxAnalysisTaskDefinition0985CED55B70D03F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Ref\":\"SmallAnalysisTaskDefinition6467A1D3\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefSmallAnalysisTaskDefinition6467A1D3181DF7A1"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Ref\":\"MediumAnalysisTaskDefinitionAE9FCE5E\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefMediumAnalysisTaskDefinitionAE9FCE5EC6CE2934"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Ref\":\"LargeAnalysisTaskDefinitionFD293BD2\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefLargeAnalysisTaskDefinitionFD293BD26679E312"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Fn::GetAtt\":[\"PipelineCluster63B468F9\",\"Arn\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttPipelineCluster63B468F9Arn53941560"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/Exports/Output{\"Fn::GetAtt\":[\"TaskSecurityGroup2D2EA438\",\"GroupId\"]}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputFnGetAttTaskSecurityGroup2D2EA438GroupIdDC08A563"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/PublishFlowComputeStack-staging/PublisherRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "PublisherRoleDefaultPolicy04D6B219"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ]
+}
