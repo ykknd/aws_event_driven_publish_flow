@@ -6,3 +6,5 @@
 - `readiness_query`: `check_readiness.py` が実行する Athena SQL
 - `output_formats`: 出力形式一覧。現状は `pptx`
 - `parameters`: レポート設定用の自由形式テーブル
+- `notification.to`: SES 通知の宛先メールアドレス一覧
+- `notification.subject`: SES 通知の件名

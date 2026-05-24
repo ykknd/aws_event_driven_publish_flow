@@ -14,6 +14,7 @@ export interface AppConfig {
   logGroupName: string;
   notificationTopicName: string;
   notificationDisplayName: string;
+  senderEmailParameterName: string;
   taskDefinitionFamily: string;
   containerName: string;
   ruleName: string;

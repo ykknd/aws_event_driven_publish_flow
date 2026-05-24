@@ -3,6 +3,7 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as iam from "aws-cdk-lib/aws-iam";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import * as tasks from "aws-cdk-lib/aws-stepfunctions-tasks";
 import { Construct } from "constructs";
@@ -11,6 +12,10 @@ import { OrchestrationStackProps } from "./types";
 export class OrchestrationStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: OrchestrationStackProps) {
     super(scope, id, props);
+
+    const senderEmail =
+      this.node.tryGetContext("senderEmail") ??
+      ssm.StringParameter.valueFromLookup(this, props.config.senderEmailParameterName);
 
     const loadContext = new sfn.Pass(this, "LoadContext", {
       parameters: {
@@ -54,6 +59,38 @@ export class OrchestrationStack extends cdk.Stack {
       resultPath: "$.status",
     });
 
+    const fetchSuccessNotificationStatus = new tasks.DynamoGetItem(this, "FetchSuccessNotificationStatus", {
+      table: props.jobStateTable,
+      key: {
+        job_key: tasks.DynamoAttributeValue.fromString(sfn.JsonPath.stringAt("$.job_key")),
+      },
+      resultPath: "$.notification_status",
+    });
+
+    const fetchGiveUpNotificationStatus = new tasks.DynamoGetItem(this, "FetchGiveUpNotificationStatus", {
+      table: props.jobStateTable,
+      key: {
+        job_key: tasks.DynamoAttributeValue.fromString(sfn.JsonPath.stringAt("$.job_key")),
+      },
+      resultPath: "$.notification_status",
+    });
+
+    const fetchReadinessFailureNotificationStatus = new tasks.DynamoGetItem(this, "FetchReadinessFailureNotificationStatus", {
+      table: props.jobStateTable,
+      key: {
+        job_key: tasks.DynamoAttributeValue.fromString(sfn.JsonPath.stringAt("$.job_key")),
+      },
+      resultPath: "$.notification_status",
+    });
+
+    const fetchAnalysisFailureNotificationStatus = new tasks.DynamoGetItem(this, "FetchAnalysisFailureNotificationStatus", {
+      table: props.jobStateTable,
+      key: {
+        job_key: tasks.DynamoAttributeValue.fromString(sfn.JsonPath.stringAt("$.job_key")),
+      },
+      resultPath: "$.notification_status",
+    });
+
     const runAnalysis = new tasks.EcsRunTask(this, "RunAnalysis", {
       integrationPattern: sfn.IntegrationPattern.RUN_JOB,
       cluster: props.cluster,
@@ -93,33 +130,116 @@ export class OrchestrationStack extends cdk.Stack {
       },
     });
 
-    const giveUp = new tasks.SnsPublish(this, "NotifyGiveUp", {
-      topic: props.notificationTopic,
-      message: sfn.TaskInput.fromText(`${props.config.namePrefix} job gave up after max retries`),
-      subject: `${props.config.namePrefix} give up`,
+    const notifyGiveUp = new tasks.CallAwsService(this, "NotifyGiveUp", {
+      service: "sesv2",
+      action: "sendEmail",
+      iamResources: ["*"],
+      parameters: {
+        FromEmailAddress: senderEmail,
+        Destination: {
+          ToAddresses: sfn.JsonPath.listAt("$.notification_status.Item.notification_to.SS"),
+        },
+        Content: {
+          Simple: {
+            Subject: {
+              Data: sfn.JsonPath.format(
+                "[GIVE UP] {}",
+                sfn.JsonPath.stringAt("$.notification_status.Item.notification_subject.S"),
+              ),
+            },
+            Body: {
+              Text: {
+                Data: sfn.JsonPath.format(
+                  "ジョブID: {}\nレポート種別: {}\n未充足対象: {}\n状態: 最大リトライ回数に達しました。",
+                  sfn.JsonPath.stringAt("$.notification_status.Item.job_id.S"),
+                  sfn.JsonPath.stringAt("$.notification_status.Item.report_type.S"),
+                  sfn.JsonPath.stringAt("$.notification_status.Item.missing_targets_text.S"),
+                ),
+              },
+            },
+          },
+        },
+      },
       resultPath: sfn.JsonPath.DISCARD,
     });
 
-    const notifyFailure = new tasks.SnsPublish(this, "NotifyFailure", {
-      topic: props.notificationTopic,
-      message: sfn.TaskInput.fromText(`${props.config.namePrefix} workflow failed`),
-      subject: `${props.config.namePrefix} failure`,
+    const notifyFailure = new tasks.CallAwsService(this, "NotifyFailure", {
+      service: "sesv2",
+      action: "sendEmail",
+      iamResources: ["*"],
+      parameters: {
+        FromEmailAddress: senderEmail,
+        Destination: {
+          ToAddresses: sfn.JsonPath.listAt("$.notification_status.Item.notification_to.SS"),
+        },
+        Content: {
+          Simple: {
+            Subject: {
+              Data: sfn.JsonPath.format(
+                "[FAILURE] {}",
+                sfn.JsonPath.stringAt("$.notification_status.Item.notification_subject.S"),
+              ),
+            },
+            Body: {
+              Text: {
+                Data: sfn.JsonPath.format(
+                  "ジョブID: {}\nレポート種別: {}\nエラー: {}\n詳細: {}",
+                  sfn.JsonPath.stringAt("$.notification_status.Item.job_id.S"),
+                  sfn.JsonPath.stringAt("$.notification_status.Item.report_type.S"),
+                  sfn.JsonPath.stringAt("$.error.Error"),
+                  sfn.JsonPath.stringAt("$.error.Cause"),
+                ),
+              },
+            },
+          },
+        },
+      },
       resultPath: sfn.JsonPath.DISCARD,
     });
 
-    const notifySuccess = new tasks.SnsPublish(this, "NotifySuccess", {
-      topic: props.notificationTopic,
-      message: sfn.TaskInput.fromText(`${props.config.namePrefix} workflow succeeded`),
-      subject: `${props.config.namePrefix} success`,
+    const notifySuccess = new tasks.CallAwsService(this, "NotifySuccess", {
+      service: "sesv2",
+      action: "sendEmail",
+      iamResources: ["*"],
+      parameters: {
+        FromEmailAddress: senderEmail,
+        Destination: {
+          ToAddresses: sfn.JsonPath.listAt("$.notification_status.Item.notification_to.SS"),
+        },
+        Content: {
+          Simple: {
+            Subject: {
+              Data: sfn.JsonPath.stringAt("$.notification_status.Item.notification_subject.S"),
+            },
+            Body: {
+              Text: {
+                Data: sfn.JsonPath.format(
+                  "ジョブID: {}\nレポート種別: {}\nPPTX: {}\n有効期限: {}",
+                  sfn.JsonPath.stringAt("$.notification_status.Item.job_id.S"),
+                  sfn.JsonPath.stringAt("$.notification_status.Item.report_type.S"),
+                  sfn.JsonPath.stringAt("$.notification_status.Item.pptx_presigned_url.S"),
+                  sfn.JsonPath.stringAt("$.notification_status.Item.pptx_presigned_url_expires_at.S"),
+                ),
+              },
+            },
+          },
+        },
+      },
       resultPath: sfn.JsonPath.DISCARD,
     });
 
     const retryLimitReached = new sfn.Choice(this, "RetryLimitReached")
-      .when(sfn.Condition.numberGreaterThanEquals("$.retry_count", props.config.maxRetries), giveUp)
+      .when(
+        sfn.Condition.numberGreaterThanEquals("$.retry_count", props.config.maxRetries),
+        fetchGiveUpNotificationStatus.next(notifyGiveUp),
+      )
       .otherwise(runReadiness);
 
     const readinessBranch = new sfn.Choice(this, "InputsReady")
-      .when(sfn.Condition.booleanEquals("$.status.Item.ready.BOOL", true), runAnalysis.next(notifySuccess))
+      .when(
+        sfn.Condition.booleanEquals("$.status.Item.ready.BOOL", true),
+        runAnalysis.next(fetchSuccessNotificationStatus).next(notifySuccess),
+      )
       .otherwise(waitThreeHours.next(incrementRetry).next(retryLimitReached));
 
     const definition = loadContext
@@ -159,7 +279,7 @@ export class OrchestrationStack extends cdk.Stack {
 
     rule.addTarget(new targets.SfnStateMachine(stateMachine));
 
-    runReadiness.addCatch(notifyFailure, { resultPath: "$.error" });
-    runAnalysis.addCatch(notifyFailure, { resultPath: "$.error" });
+    runReadiness.addCatch(fetchReadinessFailureNotificationStatus.next(notifyFailure), { resultPath: "$.error" });
+    runAnalysis.addCatch(fetchAnalysisFailureNotificationStatus.next(notifyFailure), { resultPath: "$.error" });
   }
 }

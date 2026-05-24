@@ -57,18 +57,23 @@ def persist_status(result: dict[str, Any]) -> None:
 
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(table_name)
-    table.put_item(
-        Item={
-            "job_key": result["job_key"],
-            "job_id": result["job_id"],
-            "report_type": result["report_type"],
-            "ready": result["ready"],
-            "missing_targets": result["missing_targets"],
-            "checked_at": result["checked_at"],
-            "retry_count": result["retry_count"],
-            "readiness_query": result["readiness_query"],
-        }
-    )
+    item: dict[str, Any] = {
+        "job_key": result["job_key"],
+        "job_id": result["job_id"],
+        "report_type": result["report_type"],
+        "ready": result["ready"],
+        "missing_targets": result["missing_targets"],
+        "missing_targets_text": result["missing_targets_text"],
+        "checked_at": result["checked_at"],
+        "retry_count": result["retry_count"],
+        "readiness_query": result["readiness_query"],
+        "notification_subject": result["notification_subject"],
+    }
+
+    if result["notification_to"]:
+        item["notification_to"] = set(result["notification_to"])
+
+    table.put_item(Item=item)
 
 
 def main() -> int:
@@ -78,6 +83,9 @@ def main() -> int:
     expected_targets = list(job.get("analysis_targets", []))
     available_targets = simulated_available_targets(job)
     missing_targets = [target for target in expected_targets if target not in available_targets]
+    notification = job.get("notification", {})
+    notification_to = list(notification.get("to", []))
+    notification_subject = notification.get("subject", job["job_id"])
 
     result = {
         "job_id": job["job_id"],
@@ -88,6 +96,9 @@ def main() -> int:
         "checked_at": datetime.now(timezone.utc).isoformat(),
         "retry_count": int(os.environ.get("RETRY_COUNT", "0")),
         "readiness_query": job.get("readiness_query", ""),
+        "missing_targets_text": ", ".join(missing_targets) if missing_targets else "none",
+        "notification_to": notification_to,
+        "notification_subject": notification_subject,
     }
 
     output_path = Path(args.output or os.environ.get("READINESS_OUTPUT_PATH", "tmp/readiness.json"))

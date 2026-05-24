@@ -50,6 +50,7 @@ npx cdk synth -c stage=staging -c useDockerAsset=true
 - `/publish-flow/staging/network/private-subnet-ids`
 - `/publish-flow/staging/network/s3-vpce-id`
 - `/publish-flow/staging/network/allowed-cidrs`
+- `/publish-flow/staging/notification/from-address`
 
 `prod`
 
@@ -57,6 +58,7 @@ npx cdk synth -c stage=staging -c useDockerAsset=true
 - `/publish-flow/prod/network/private-subnet-ids`
 - `/publish-flow/prod/network/s3-vpce-id`
 - `/publish-flow/prod/network/allowed-cidrs`
+- `/publish-flow/prod/notification/from-address`
 
 推奨する値の形式は次です。
 
@@ -64,6 +66,7 @@ npx cdk synth -c stage=staging -c useDockerAsset=true
 - `private-subnet-ids`: `subnet-a,subnet-b,subnet-c`
 - `s3-vpce-id`: `vpce-xxxxxxxx`
 - `allowed-cidrs`: `203.0.113.10/32,203.0.113.0/24`
+- `from-address`: `noreply@example.com`
 
 ### 既存ネットワークの前提
 
@@ -82,6 +85,7 @@ GitHub Actions やローカル `cdk synth` では、SSM lookup の代わりに c
 - `PRIVATE_SUBNET_IDS=subnet-a,subnet-b,subnet-c`
 - `S3_VPCE_ID=vpce-xxxxxxxx`
 - `ALLOWED_CIDRS=203.0.113.10/32,203.0.113.0/24`
+- `SENDER_EMAIL=noreply@example.com`
 
 例:
 
@@ -92,7 +96,8 @@ npx cdk synth \
   -c vpcId=vpc-xxxxxxxx \
   -c privateSubnetIds=subnet-a,subnet-b \
   -c s3VpceId=vpce-xxxxxxxx \
-  -c allowedCidrs=203.0.113.10/32,203.0.113.0/24
+  -c allowedCidrs=203.0.113.10/32,203.0.113.0/24 \
+  -c senderEmail=noreply@example.com
 ```
 
 ### Engine
@@ -112,3 +117,5 @@ uv run python app/run_analysis.py --job ..\jobs\examples\inventory_report.toml
 - staging / prod は同一 AWS アカウント内で分離し、主要な物理名は `publish-flow-<stage>-<resource>` 形式で統一します。
 - 本番は保護を強めるため、主要ストレージ系リソースは `Retain` を使い、スタックの termination protection も有効にします。
 - S3 の閲覧制限は `SourceVpce` と社内 CIDR の両方を使って制御します。
+- 通知メールは SES を使い、送信元は Parameter Store または `senderEmail` context で指定します。
+- 通知先と件名は、S3 に置かれる実ジョブ TOML の `[notification]` から読み取ります。

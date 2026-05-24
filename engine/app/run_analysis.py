@@ -7,7 +7,7 @@ import os
 import shutil
 import sys
 import tomllib
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -137,22 +137,52 @@ def upload_outputs_to_s3(bucket: str, prefix: str, artifacts: list[dict[str, Any
     s3.upload_file(str(manifest_path), bucket, f"{prefix}/manifest.json")
 
 
-def persist_job_state(job_key: str, manifest_s3_key: str, rendered_outputs: list[dict[str, Any]]) -> None:
+def build_presigned_url(bucket: str, rendered_outputs: list[dict[str, Any]], expires_in: int) -> tuple[str | None, str | None]:
+    pptx_output = next((output for output in rendered_outputs if output["kind"] == "pptx"), None)
+    if not pptx_output:
+        return None, None
+
+    s3 = boto3.client("s3")
+    url = s3.generate_presigned_url(
+        "get_object",
+        Params={"Bucket": bucket, "Key": pptx_output["s3_key"]},
+        ExpiresIn=expires_in,
+    )
+    return pptx_output["s3_key"], url
+
+
+def persist_job_state(
+    job_key: str,
+    manifest_s3_key: str,
+    rendered_outputs: list[dict[str, Any]],
+    pptx_s3_key: str | None,
+    pptx_presigned_url: str | None,
+    pptx_presigned_url_expires_at: str | None,
+) -> None:
     table_name = os.environ.get("JOB_STATE_TABLE")
     if not table_name:
         return
 
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(table_name)
+    expression_values: dict[str, Any] = {
+        ":status": "completed",
+        ":manifest_s3_key": manifest_s3_key,
+        ":rendered_outputs": rendered_outputs,
+    }
+    update_expression = "SET #status = :status, manifest_s3_key = :manifest_s3_key, rendered_outputs = :rendered_outputs"
+
+    if pptx_s3_key and pptx_presigned_url and pptx_presigned_url_expires_at:
+        expression_values[":pptx_s3_key"] = pptx_s3_key
+        expression_values[":pptx_presigned_url"] = pptx_presigned_url
+        expression_values[":pptx_presigned_url_expires_at"] = pptx_presigned_url_expires_at
+        update_expression += ", pptx_s3_key = :pptx_s3_key, pptx_presigned_url = :pptx_presigned_url, pptx_presigned_url_expires_at = :pptx_presigned_url_expires_at"
+
     table.update_item(
         Key={"job_key": job_key},
-        UpdateExpression="SET #status = :status, manifest_s3_key = :manifest_s3_key, rendered_outputs = :rendered_outputs",
+        UpdateExpression=update_expression,
         ExpressionAttributeNames={"#status": "status"},
-        ExpressionAttributeValues={
-            ":status": "completed",
-            ":manifest_s3_key": manifest_s3_key,
-            ":rendered_outputs": rendered_outputs,
-        },
+        ExpressionAttributeValues=expression_values,
     )
 
 
@@ -215,10 +245,26 @@ def main() -> int:
 
     output_bucket = os.environ.get("OUTPUT_BUCKET")
     output_prefix = os.environ.get("OUTPUT_PREFIX", f"outputs/{job['job_id']}")
+    presigned_url_expires_in = int(os.environ.get("PRESIGNED_URL_EXPIRES_IN", "86400"))
+    pptx_s3_key: str | None = None
+    pptx_presigned_url: str | None = None
+    pptx_presigned_url_expires_at: str | None = None
     if output_bucket:
         upload_outputs_to_s3(output_bucket, output_prefix, artifacts, rendered_outputs, manifest_path)
+        pptx_s3_key, pptx_presigned_url = build_presigned_url(output_bucket, rendered_outputs, presigned_url_expires_in)
+        if pptx_presigned_url:
+            pptx_presigned_url_expires_at = (
+                datetime.now(timezone.utc) + timedelta(seconds=presigned_url_expires_in)
+            ).isoformat()
 
-    persist_job_state(os.environ.get("JOB_KEY", job_reference), f"{output_prefix}/manifest.json", rendered_outputs)
+    persist_job_state(
+        os.environ.get("JOB_KEY", job_reference),
+        f"{output_prefix}/manifest.json",
+        rendered_outputs,
+        pptx_s3_key,
+        pptx_presigned_url,
+        pptx_presigned_url_expires_at,
+    )
 
     print(json.dumps({"manifest": str(manifest_path), "report_type": job["report_type"]}))
     return 0

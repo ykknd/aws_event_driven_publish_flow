@@ -3,7 +3,6 @@ import * as ddb from "aws-cdk-lib/aws-dynamodb";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as s3 from "aws-cdk-lib/aws-s3";
-import * as sns from "aws-cdk-lib/aws-sns";
 import type { AppConfig } from "../config";
 
 export interface StackPropsWithConfig extends cdk.StackProps {
@@ -20,5 +19,4 @@ export interface OrchestrationStackProps extends ComputeStackProps {
   taskDefinition: ecs.FargateTaskDefinition;
   containerName: string;
   taskSecurityGroup: ec2.ISecurityGroup;
-  notificationTopic: sns.ITopic;
 }

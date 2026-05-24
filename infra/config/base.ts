@@ -5,6 +5,7 @@ import { AppConfig, Stage } from "./types";
 export function createBaseConfig(stage: Stage): AppConfig {
   const namePrefix = `publish-flow-${stage}`;
   const networkParamPrefix = `/publish-flow/${stage}/network`;
+  const notificationParamPrefix = `/publish-flow/${stage}/notification`;
 
   return {
     stage,
@@ -17,6 +18,7 @@ export function createBaseConfig(stage: Stage): AppConfig {
     logGroupName: `/aws/ecs/${namePrefix}-engine`,
     notificationTopicName: `${namePrefix}-notifications`,
     notificationDisplayName: `${namePrefix} notifications`,
+    senderEmailParameterName: `${notificationParamPrefix}/from-address`,
     taskDefinitionFamily: `${namePrefix}-engine`,
     containerName: `${namePrefix}-engine`,
     ruleName: `${namePrefix}-jobs-created`,

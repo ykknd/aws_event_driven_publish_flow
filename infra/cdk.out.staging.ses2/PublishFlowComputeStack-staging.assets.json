@@ -1,0 +1,20 @@
+{
+  "version": "53.0.0",
+  "files": {
+    "47a1f2a71fa87a7c13770f9a8f66eba852f4061bc7bdf26abb7ef98c0df37d1b": {
+      "displayName": "PublishFlowComputeStack-staging Template",
+      "source": {
+        "path": "PublishFlowComputeStack-staging.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-0d6feeb2": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "47a1f2a71fa87a7c13770f9a8f66eba852f4061bc7bdf26abb7ef98c0df37d1b.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

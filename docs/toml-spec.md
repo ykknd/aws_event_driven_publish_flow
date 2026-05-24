@@ -11,6 +11,8 @@
 ## 任意項目
 
 - `parameters`: レポート固有の追加パラメータ
+- `notification.to`: 通知先メールアドレス一覧
+- `notification.subject`: 通知メールの件名
 
 ## 例
 
@@ -23,4 +25,8 @@ output_formats = ["pptx"]
 
 [parameters]
 title = "Inventory Report"
+
+[notification]
+to = ["inventory-team@example.com"]
+subject = "Inventory Report"
 ```
