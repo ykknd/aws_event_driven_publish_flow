@@ -1,16 +1,16 @@
 {
   "version": "53.0.0",
   "files": {
-    "861977370e3a51cb5944b2414941c6ad690130f12a1a7b362ac8fcfd30d92fcb": {
+    "70e2f2278fe2b983b9d8c6796f58a6f53df3a4607c07256604cdabce0572d92f": {
       "displayName": "PublishFlowComputeStack-staging Template",
       "source": {
         "path": "PublishFlowComputeStack-staging.template.json",
         "packaging": "file"
       },
       "destinations": {
-        "current_account-current_region-a9e910a7": {
+        "current_account-current_region-7bfe3d5c": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "861977370e3a51cb5944b2414941c6ad690130f12a1a7b362ac8fcfd30d92fcb.json",
+          "objectKey": "70e2f2278fe2b983b9d8c6796f58a6f53df3a4607c07256604cdabce0572d92f.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }

@@ -166,7 +166,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...new Role2 in aws-cdk-lib...",
-        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:56:27)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:73:27)",
         "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
         "...node internals, ts-node, ts-node..."
       ]
@@ -181,7 +181,7 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...new LogGroup2 in aws-cdk-lib...",
-        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:75:22)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:92:22)",
         "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
         "...node internals, ts-node, ts-node..."
       ]
@@ -196,8 +196,8 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...new FargateTaskDefinition2 in aws-cdk-lib...",
-        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:89:30)",
-        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:112:36)",
+        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:106:30)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:129:36)",
         "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
         "...node internals, ts-node..."
       ]
@@ -212,10 +212,10 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...new FargateTaskDefinition2 in aws-cdk-lib...",
-        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:89:30)",
-        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121:3)",
+        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:106:30)",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:138: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:138:3)",
         "Array.reduce (:)",
-        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:119:66)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:136:66)",
         "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
         "...node internals..."
       ]
@@ -230,10 +230,10 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...new FargateTaskDefinition2 in aws-cdk-lib...",
-        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:89:30)",
-        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121:3)",
+        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:106:30)",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:138: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:138:3)",
         "Array.reduce (:)",
-        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:119:66)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:136:66)",
         "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
         "...node internals..."
       ]
@@ -248,10 +248,10 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...new FargateTaskDefinition2 in aws-cdk-lib...",
-        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:89:30)",
-        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121:3)",
+        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:106:30)",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:138: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:138:3)",
         "Array.reduce (:)",
-        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:119:66)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:136:66)",
         "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
         "...node internals..."
       ]
@@ -266,10 +266,10 @@
       "type": "aws:cdk:creationStack",
       "data": [
         "...new FargateTaskDefinition2 in aws-cdk-lib...",
-        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:89:30)",
-        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:121:3)",
+        "createTaskDefinition (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:106:30)",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:138: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:138:3)",
         "Array.reduce (:)",
-        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:119:66)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:136:66)",
         "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
         "...node internals..."
       ]
@@ -413,8 +413,12 @@
     {
       "type": "aws:cdk:creationStack",
       "data": [
-        "...aws-cdk-lib...",
-        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:81: (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:81:2)",
+        "Array.forEach (:)",
+        "new ComputeStack (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\lib\\compute-stack.ts:80:37)",
+        "<anonymous> (C:\\Users\\Yukio Kaneda\\OneDrive\\ドキュメント\\publish_flow\\infra\\bin\\app.ts:21:17)",
+        "...node internals..."
       ]
     }
   ]

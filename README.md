@@ -170,6 +170,9 @@ uv run python app/run_analysis.py --job ..\jobs\examples\inventory_report.toml
 - S3 の閲覧制限は `SourceVpce` と社内 CIDR の両方を使って制御します。
 - 通知メールは SES を使い、送信元は Parameter Store または `senderEmail` context で指定します。
 - 通知先と件名は、S3 に置かれる実ジョブ TOML の `[notification]` から読み取ります。
+- readiness 判定は Athena の `readiness_query` を実行して行います。既定の workgroup は `primary` です。
+- 成果物の出力先は `outputs/<type_name>/<purpose>/<job_id>/...` に統一します。
+- `type_name` と `purpose` は日本語を使わず、英小文字・数字・`-` / `_` の slug として運用します。
 - `analysis_targets` の件数に応じて、解析用 Fargate タスクは 4 段階で自動的に切り替わります。
   - `small`: 1-5 件, `4 vCPU / 30 GiB`
   - `medium`: 6-20 件, `8 vCPU / 60 GiB`

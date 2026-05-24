@@ -51,7 +51,24 @@ export class ComputeStack extends cdk.Stack {
     const publisherManagedPolicies = [
       iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AmazonECSTaskExecutionRolePolicy"),
     ];
-    const publisherCustomPolicyStatements: iam.PolicyStatement[] = [];
+    const publisherCustomPolicyStatements: iam.PolicyStatement[] = [
+      new iam.PolicyStatement({
+        actions: [
+          "athena:BatchGetQueryExecution",
+          "athena:GetQueryExecution",
+          "athena:GetQueryResults",
+          "athena:StartQueryExecution",
+          "athena:StopQueryExecution",
+          "glue:GetDatabase",
+          "glue:GetDatabases",
+          "glue:GetPartition",
+          "glue:GetPartitions",
+          "glue:GetTable",
+          "glue:GetTables",
+        ],
+        resources: ["*"],
+      }),
+    ];
 
     const publisherRole = new iam.Role(this, "PublisherRole", {
       roleName: props.config.publisherRoleName,

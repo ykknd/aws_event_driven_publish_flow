@@ -736,7 +736,7 @@
        {
         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputRefJobStateTable8E120B77111DC2CE"
        },
-       "\"},{\"Name\":\"TASK_SIZE_PROFILES_JSON\",\"Value\":\"[{\\\"name\\\":\\\"small\\\",\\\"maxTargets\\\":5,\\\"cpu\\\":512,\\\"memoryLimitMiB\\\":1024},{\\\"name\\\":\\\"medium\\\",\\\"maxTargets\\\":20,\\\"cpu\\\":1024,\\\"memoryLimitMiB\\\":2048},{\\\"name\\\":\\\"large\\\",\\\"maxTargets\\\":50,\\\"cpu\\\":2048,\\\"memoryLimitMiB\\\":4096},{\\\"name\\\":\\\"max\\\",\\\"cpu\\\":4096,\\\"memoryLimitMiB\\\":8192}]\"}]}]},\"LaunchType\":\"FARGATE\"}},\"FetchJobStatus\":{\"Next\":\"InputsReady\",\"Type\":\"Task\",\"ResultPath\":\"$.status\",\"Resource\":\"arn:",
+       "\"},{\"Name\":\"TASK_SIZE_PROFILES_JSON\",\"Value\":\"[{\\\"name\\\":\\\"small\\\",\\\"maxTargets\\\":5,\\\"cpu\\\":4096,\\\"memoryLimitMiB\\\":30720},{\\\"name\\\":\\\"medium\\\",\\\"maxTargets\\\":20,\\\"cpu\\\":8192,\\\"memoryLimitMiB\\\":61440},{\\\"name\\\":\\\"large\\\",\\\"maxTargets\\\":50,\\\"cpu\\\":16384,\\\"memoryLimitMiB\\\":81920},{\\\"name\\\":\\\"max\\\",\\\"cpu\\\":16384,\\\"memoryLimitMiB\\\":106496}]\"}]}]},\"LaunchType\":\"FARGATE\"}},\"FetchJobStatus\":{\"Next\":\"InputsReady\",\"Type\":\"Task\",\"ResultPath\":\"$.status\",\"Resource\":\"arn:",
        {
         "Ref": "AWS::Partition"
        },
@@ -772,7 +772,7 @@
        {
         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputRefArtifactsBucket2AAC55442DB5E6C9"
        },
-       "\"},{\"Name\":\"OUTPUT_PREFIX\",\"Value.$\":\"States.Format('outputs/{}', $.status.Item.job_id.S)\"},{\"Name\":\"JOB_STATE_TABLE\",\"Value\":\"",
+       "\"},{\"Name\":\"OUTPUT_PREFIX\",\"Value.$\":\"$.status.Item.output_prefix.S\"},{\"Name\":\"JOB_STATE_TABLE\",\"Value\":\"",
        {
         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputRefJobStateTable8E120B77111DC2CE"
        },
@@ -812,7 +812,7 @@
        {
         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputRefArtifactsBucket2AAC55442DB5E6C9"
        },
-       "\"},{\"Name\":\"OUTPUT_PREFIX\",\"Value.$\":\"States.Format('outputs/{}', $.status.Item.job_id.S)\"},{\"Name\":\"JOB_STATE_TABLE\",\"Value\":\"",
+       "\"},{\"Name\":\"OUTPUT_PREFIX\",\"Value.$\":\"$.status.Item.output_prefix.S\"},{\"Name\":\"JOB_STATE_TABLE\",\"Value\":\"",
        {
         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputRefJobStateTable8E120B77111DC2CE"
        },
@@ -840,7 +840,7 @@
        {
         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputRefArtifactsBucket2AAC55442DB5E6C9"
        },
-       "\"},{\"Name\":\"OUTPUT_PREFIX\",\"Value.$\":\"States.Format('outputs/{}', $.status.Item.job_id.S)\"},{\"Name\":\"JOB_STATE_TABLE\",\"Value\":\"",
+       "\"},{\"Name\":\"OUTPUT_PREFIX\",\"Value.$\":\"$.status.Item.output_prefix.S\"},{\"Name\":\"JOB_STATE_TABLE\",\"Value\":\"",
        {
         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputRefJobStateTable8E120B77111DC2CE"
        },
@@ -868,7 +868,7 @@
        {
         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputRefArtifactsBucket2AAC55442DB5E6C9"
        },
-       "\"},{\"Name\":\"OUTPUT_PREFIX\",\"Value.$\":\"States.Format('outputs/{}', $.status.Item.job_id.S)\"},{\"Name\":\"JOB_STATE_TABLE\",\"Value\":\"",
+       "\"},{\"Name\":\"OUTPUT_PREFIX\",\"Value.$\":\"$.status.Item.output_prefix.S\"},{\"Name\":\"JOB_STATE_TABLE\",\"Value\":\"",
        {
         "Fn::ImportValue": "PublishFlowStorageStack-staging:ExportsOutputRefJobStateTable8E120B77111DC2CE"
        },

@@ -1,5 +1,7 @@
 job_id = "inventory-report-demo"
 report_type = "inventory_report"
+type_name = "inventory"
+purpose = "monthly-summary"
 analysis_targets = ["inventory_snapshot", "warehouse_delta"]
 readiness_query = "SELECT target_id FROM readiness_inventory_demo"
 output_formats = ["pptx"]

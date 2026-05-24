@@ -4,6 +4,7 @@ import argparse
 import boto3
 import json
 import os
+import time
 import sys
 import tomllib
 from datetime import datetime, timezone
@@ -48,8 +49,51 @@ def load_job(args: argparse.Namespace) -> tuple[dict[str, Any], str]:
 def simulated_available_targets(job: dict[str, Any]) -> list[str]:
     targets_env = os.environ.get("SIMULATED_AVAILABLE_TARGETS")
     if not targets_env:
-        return list(job.get("analysis_targets", []))
+        return execute_athena_readiness_query(job)
     return [item.strip() for item in targets_env.split(",") if item.strip()]
+
+
+def execute_athena_readiness_query(job: dict[str, Any]) -> list[str]:
+    readiness_query = job.get("readiness_query", "").strip()
+    if not readiness_query:
+        return []
+
+    athena = boto3.client("athena")
+    start_query_kwargs: dict[str, Any] = {
+        "QueryString": readiness_query,
+        "WorkGroup": os.environ.get("ATHENA_WORKGROUP", "primary"),
+    }
+
+    athena_output_location = os.environ.get("ATHENA_OUTPUT_LOCATION")
+    if athena_output_location:
+        start_query_kwargs["ResultConfiguration"] = {"OutputLocation": athena_output_location}
+
+    response = athena.start_query_execution(**start_query_kwargs)
+    query_execution_id = response["QueryExecutionId"]
+
+    while True:
+        execution = athena.get_query_execution(QueryExecutionId=query_execution_id)
+        state = execution["QueryExecution"]["Status"]["State"]
+        if state == "SUCCEEDED":
+            break
+        if state in {"FAILED", "CANCELLED"}:
+            reason = execution["QueryExecution"]["Status"].get("StateChangeReason", "unknown Athena error")
+            raise RuntimeError(f"Athena readiness query {state.lower()}: {reason}")
+        time.sleep(1)
+
+    paginator = athena.get_paginator("get_query_results")
+    target_ids: list[str] = []
+    header_skipped = False
+    for page in paginator.paginate(QueryExecutionId=query_execution_id):
+        for row in page["ResultSet"]["Rows"]:
+            values = [column.get("VarCharValue", "") for column in row.get("Data", [])]
+            if not header_skipped:
+                header_skipped = True
+                continue
+            if values and values[0]:
+                target_ids.append(values[0])
+
+    return target_ids
 
 
 def load_task_size_profiles() -> list[dict[str, Any]]:
@@ -95,6 +139,8 @@ def persist_status(result: dict[str, Any]) -> None:
         "job_key": result["job_key"],
         "job_id": result["job_id"],
         "report_type": result["report_type"],
+        "type_name": result["type_name"],
+        "purpose": result["purpose"],
         "ready": result["ready"],
         "missing_targets": result["missing_targets"],
         "missing_targets_text": result["missing_targets_text"],
@@ -106,6 +152,7 @@ def persist_status(result: dict[str, Any]) -> None:
         "task_size_profile": result["task_size_profile"],
         "task_cpu": result["task_cpu"],
         "task_memory_limit_mib": result["task_memory_limit_mib"],
+        "output_prefix": result["output_prefix"],
     }
 
     if result["notification_to"]:
@@ -131,6 +178,8 @@ def main() -> int:
         "job_id": job["job_id"],
         "job_key": os.environ.get("JOB_KEY", job_path),
         "report_type": job["report_type"],
+        "type_name": job["type_name"],
+        "purpose": job["purpose"],
         "ready": not missing_targets,
         "missing_targets": missing_targets,
         "checked_at": datetime.now(timezone.utc).isoformat(),
@@ -143,6 +192,7 @@ def main() -> int:
         "task_size_profile": selected_task_size["name"],
         "task_cpu": selected_task_size["cpu"],
         "task_memory_limit_mib": selected_task_size["memory_limit_mib"],
+        "output_prefix": f"outputs/{job['type_name']}/{job['purpose']}/{job['job_id']}",
     }
 
     output_path = Path(args.output or os.environ.get("READINESS_OUTPUT_PATH", "tmp/readiness.json"))

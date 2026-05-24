@@ -96,7 +96,7 @@ export class OrchestrationStack extends cdk.Stack {
               { name: "JOB_BUCKET", value: sfn.JsonPath.stringAt("$.bucket") },
               { name: "JOB_KEY", value: sfn.JsonPath.stringAt("$.job_key") },
               { name: "OUTPUT_BUCKET", value: props.artifactsBucket.bucketName },
-              { name: "OUTPUT_PREFIX", value: sfn.JsonPath.format("outputs/{}", sfn.JsonPath.stringAt("$.status.Item.job_id.S")) },
+              { name: "OUTPUT_PREFIX", value: sfn.JsonPath.stringAt("$.status.Item.output_prefix.S") },
               { name: "JOB_STATE_TABLE", value: props.jobStateTable.tableName },
               { name: "TASK_SIZE_PROFILE", value: sfn.JsonPath.stringAt("$.status.Item.task_size_profile.S") },
             ],

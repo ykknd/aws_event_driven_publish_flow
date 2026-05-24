@@ -1,5 +1,7 @@
 job_id = "sales-summary-demo"
 report_type = "sales_summary"
+type_name = "sales"
+purpose = "regional-summary"
 analysis_targets = ["sales_daily", "sales_regions"]
 readiness_query = "SELECT target_id FROM readiness_sales_demo"
 output_formats = ["pptx"]

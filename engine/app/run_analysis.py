@@ -52,6 +52,17 @@ def load_report_config(report_dir: Path) -> dict[str, Any]:
     return tomllib.loads((report_dir / "report.toml").read_text(encoding="utf-8"))
 
 
+def build_output_prefix(job: dict[str, Any]) -> str:
+    return f"outputs/{job['type_name']}/{job['purpose']}/{job['job_id']}"
+
+
+def output_prefix_to_local_path(output_prefix: str) -> Path:
+    parts = output_prefix.split("/")
+    if parts and parts[0] == "outputs":
+        parts = parts[1:]
+    return Path(*parts)
+
+
 def detect_workspace_root(explicit: str | None) -> Path:
     if explicit:
         return Path(explicit).resolve()
@@ -87,13 +98,14 @@ def execute_notebook(notebook_path: Path, artifact_dir: Path, job_context_path: 
 
 
 def upload_local_artifacts(
-    job_id: str, artifact_dir: Path, rendered_dir: Path, output_root: Path
+    output_prefix: str, artifact_dir: Path, rendered_dir: Path, output_root: Path
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     artifacts: list[dict[str, Any]] = []
     rendered_outputs: list[dict[str, Any]] = []
 
-    artifact_target = output_root / job_id / "artifacts"
-    rendered_target = output_root / job_id / "rendered"
+    prefix_path = output_prefix_to_local_path(output_prefix)
+    artifact_target = output_root / prefix_path / "artifacts"
+    rendered_target = output_root / prefix_path / "rendered"
     artifact_target.mkdir(parents=True, exist_ok=True)
     rendered_target.mkdir(parents=True, exist_ok=True)
 
@@ -105,7 +117,7 @@ def upload_local_artifacts(
                 "kind": path.suffix.lstrip("."),
                 "label": path.stem.replace("_", " ").title(),
                 "local_path": str(copied.resolve()),
-                "s3_key": f"outputs/{job_id}/artifacts/{path.name}",
+                "s3_key": f"{output_prefix}/artifacts/{path.name}",
             }
         )
 
@@ -117,7 +129,7 @@ def upload_local_artifacts(
                 "kind": path.suffix.lstrip("."),
                 "label": path.stem.replace("_", " ").title(),
                 "local_path": str(copied.resolve()),
-                "s3_key": f"outputs/{job_id}/rendered/{path.name}",
+                "s3_key": f"{output_prefix}/rendered/{path.name}",
             }
         )
 
@@ -190,6 +202,8 @@ def build_manifest(job: dict[str, Any], artifacts: list[dict[str, Any]], rendere
     return {
         "job_id": job["job_id"],
         "report_type": job["report_type"],
+        "type_name": job["type_name"],
+        "purpose": job["purpose"],
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "artifacts": artifacts,
         "rendered_outputs": rendered_outputs,
@@ -202,6 +216,7 @@ def main() -> int:
     workspace = detect_workspace_root(args.workspace)
     runtime_root = Path.cwd().resolve()
     job, job_reference = load_job_from_env(args)
+    output_prefix = os.environ.get("OUTPUT_PREFIX", build_output_prefix(job))
     report_dir = workspace / "reports" / job["report_type"]
     report_config = load_report_config(report_dir)
 
@@ -221,12 +236,14 @@ def main() -> int:
     provisional_manifest = {
         "job_id": job["job_id"],
         "report_type": job["report_type"],
+        "type_name": job["type_name"],
+        "purpose": job["purpose"],
         "artifacts": [
             {
                 "kind": path.suffix.lstrip("."),
                 "label": path.stem.replace("_", " ").title(),
                 "local_path": str(path.resolve()),
-                "s3_key": f"outputs/{job['job_id']}/artifacts/{path.name}",
+                "s3_key": f"{output_prefix}/artifacts/{path.name}",
             }
             for path in sorted(artifact_dir.iterdir())
         ],
@@ -237,14 +254,13 @@ def main() -> int:
     if not output_root.is_absolute():
         output_root = runtime_root / output_root
 
-    artifacts, rendered_outputs = upload_local_artifacts(job["job_id"], artifact_dir, rendered_dir, output_root)
+    artifacts, rendered_outputs = upload_local_artifacts(output_prefix, artifact_dir, rendered_dir, output_root)
     manifest = build_manifest(job, artifacts, rendered_outputs)
-    manifest_path = output_root / job["job_id"] / "manifest.json"
+    manifest_path = output_root / output_prefix_to_local_path(output_prefix) / "manifest.json"
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
 
     output_bucket = os.environ.get("OUTPUT_BUCKET")
-    output_prefix = os.environ.get("OUTPUT_PREFIX", f"outputs/{job['job_id']}")
     presigned_url_expires_in = int(os.environ.get("PRESIGNED_URL_EXPIRES_IN", "86400"))
     pptx_s3_key: str | None = None
     pptx_presigned_url: str | None = None

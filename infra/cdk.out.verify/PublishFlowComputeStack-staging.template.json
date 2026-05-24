@@ -99,6 +99,23 @@
      "Statement": [
       {
        "Action": [
+        "athena:BatchGetQueryExecution",
+        "athena:GetQueryExecution",
+        "athena:GetQueryResults",
+        "athena:StartQueryExecution",
+        "athena:StopQueryExecution",
+        "glue:GetDatabase",
+        "glue:GetDatabases",
+        "glue:GetPartition",
+        "glue:GetPartitions",
+        "glue:GetTable",
+        "glue:GetTables"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
         "logs:CreateLogStream",
         "logs:PutLogEvents"
        ],
@@ -301,7 +318,7 @@
       "Name": "publish-flow-staging-engine"
      }
     ],
-    "Cpu": "512",
+    "Cpu": "4096",
     "ExecutionRoleArn": {
      "Fn::GetAtt": [
       "PublisherRoleFDE2F285",
@@ -309,7 +326,7 @@
      ]
     },
     "Family": "publish-flow-staging-engine-small",
-    "Memory": "1024",
+    "Memory": "30720",
     "NetworkMode": "awsvpc",
     "RequiresCompatibilities": [
      "FARGATE"
@@ -364,7 +381,7 @@
       "Name": "publish-flow-staging-engine"
      }
     ],
-    "Cpu": "1024",
+    "Cpu": "8192",
     "ExecutionRoleArn": {
      "Fn::GetAtt": [
       "PublisherRoleFDE2F285",
@@ -372,7 +389,7 @@
      ]
     },
     "Family": "publish-flow-staging-engine-medium",
-    "Memory": "2048",
+    "Memory": "61440",
     "NetworkMode": "awsvpc",
     "RequiresCompatibilities": [
      "FARGATE"
@@ -427,7 +444,7 @@
       "Name": "publish-flow-staging-engine"
      }
     ],
-    "Cpu": "2048",
+    "Cpu": "16384",
     "ExecutionRoleArn": {
      "Fn::GetAtt": [
       "PublisherRoleFDE2F285",
@@ -435,7 +452,7 @@
      ]
     },
     "Family": "publish-flow-staging-engine-large",
-    "Memory": "4096",
+    "Memory": "81920",
     "NetworkMode": "awsvpc",
     "RequiresCompatibilities": [
      "FARGATE"
@@ -490,7 +507,7 @@
       "Name": "publish-flow-staging-engine"
      }
     ],
-    "Cpu": "4096",
+    "Cpu": "16384",
     "ExecutionRoleArn": {
      "Fn::GetAtt": [
       "PublisherRoleFDE2F285",
@@ -498,7 +515,7 @@
      ]
     },
     "Family": "publish-flow-staging-engine-max",
-    "Memory": "8192",
+    "Memory": "106496",
     "NetworkMode": "awsvpc",
     "RequiresCompatibilities": [
      "FARGATE"
