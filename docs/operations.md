@@ -1,100 +1,35 @@
 # Operations
 
-## ローカル確認
+運用手順は `docs/playbooks/` に整理しています。用途に応じて次を参照してください。
 
-- `cd infra && npx cdk synth -c stage=staging`
-- `cd infra && npx cdk synth -c stage=prod`
-- `cd engine && uv sync`
-- `cd engine && uv run pytest ../tests/unit`
+- `docs/playbooks/environment-setup.md`
+- `docs/playbooks/local-validation.md`
+- `docs/playbooks/job-authoring.md`
+- `docs/playbooks/pipeline-operations.md`
+- `docs/playbooks/troubleshooting.md`
 
-## 環境切替
+## 役割分担
 
-- `stage` は CDK context で切り替えます
-- 未指定時は `staging` を使います
+- `README.md`: 全体入口
+- `docs/architecture.md`: 構成説明
+- `docs/operations.md`: 手順の索引
+- `docs/playbooks/*.md`: 実務手順の本体
+- `.github/skills/*/SKILL.md`: GitHub Copilot 向け repo 固有 skill
+
+## 補足
+
 - 命名規則は `publish-flow-<stage>-<resource>` に統一します
-- 例: `publish-flow-staging-publisher`
-- 例: `publish-flow-prod-state-machine`
+- 成果物は `outputs/<type_name>/<purpose>/<job_id>/...` に保存します
+- `type_name` と `purpose` は日本語を使わず slug として運用します
 
-## 本番保護
+## GitHub Copilot skill の推奨順
 
-- `prod` は `RemovalPolicy.RETAIN` を使います
-- `prod` のスタックは termination protection を有効にします
-- `staging` は破棄しやすさを優先します
+1. `setup-environment`
+2. `run-local-checks`
+3. `author-job-toml`
+4. `operate-pipeline`
+5. 必要に応じて `debug-failures`
+6. 本実装移行時に `swap-in-real-assets`
 
-## ネットワーク前提
-
-- ECS タスクは既存 VPC の private subnet に配置します
-- public subnet や public IP は使いません
-- 既存 VPC の S3 VPC endpoint を経由したアクセスを許可します
-- 社内ネットワークからの閲覧は CIDR ベースで許可します
-
-## Parameter Store で用意する値
-
-`staging`
-
-- `/publish-flow/staging/network/vpc-id`
-- `/publish-flow/staging/network/private-subnet-ids`
-- `/publish-flow/staging/network/s3-vpce-id`
-- `/publish-flow/staging/network/allowed-cidrs`
-- `/publish-flow/staging/notification/from-address`
-
-`prod`
-
-- `/publish-flow/prod/network/vpc-id`
-- `/publish-flow/prod/network/private-subnet-ids`
-- `/publish-flow/prod/network/s3-vpce-id`
-- `/publish-flow/prod/network/allowed-cidrs`
-- `/publish-flow/prod/notification/from-address`
-
-値の形式
-
-- `vpc-id`: `vpc-xxxxxxxx`
-- `private-subnet-ids`: `subnet-a,subnet-b,subnet-c`
-- `s3-vpce-id`: `vpce-xxxxxxxx`
-- `allowed-cidrs`: `203.0.113.10/32,203.0.113.0/24`
-- `from-address`: `noreply@example.com`
-
-## GitHub Variables / CDK context で直接渡す場合
-
-- `vpcId`
-- `privateSubnetIds`
-- `s3VpceId`
-- `allowedCidrs`
-- `senderEmail`
-
-例:
-
-```bash
-cd infra
-npx cdk synth \
-  -c stage=staging \
-  -c vpcId=vpc-xxxxxxxx \
-  -c privateSubnetIds=subnet-a,subnet-b \
-  -c s3VpceId=vpce-xxxxxxxx \
-  -c allowedCidrs=203.0.113.10/32,203.0.113.0/24 \
-  -c senderEmail=noreply@example.com
-```
-
-SSM に値がある場合は、context を省略するとそちらを参照します。
-
-## SES 通知の前提
-
-- `from-address` は SES で verify 済みのアドレスまたはドメイン配下アドレスを使います
-- 通知先と件名は S3 に置かれる実ジョブ TOML の `[notification]` から読み取ります
-- 成功時の本文には `pptx` の presigned URL と有効期限を入れます
-
-## ダミー資産の差し替え
-
-本番利用前に、次は既存実装の実ファイルへ差し替えてください。
-
-- `engine/app/check_readiness.py`
-- `engine/app/run_analysis.py`
-- `reports/*/process.ipynb`
-- `reports/*/template.pptx`
-- `engine/Dockerfile`
-
-## 実行時の前提
-
-- ECS タスクは短時間で終了する想定です。
-- readiness の再試行状態は DynamoDB に保持します。
-- artifact とレンダリング済みファイルは `outputs/<job_id>/` 配下に保存します。
+通常フローは 1 から 4 です。  
+`debug-failures` は障害時、`swap-in-real-assets` は既存資産差し替え時に使います。
